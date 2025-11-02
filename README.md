@@ -46,7 +46,6 @@ const template = {
 
 // Renderizar en canvas
 const canvas = await brush(
-  { width: 800, height: 600 },
   template,
   {}, // imágenes (opcional)
   {}, // filtros de texto (opcional)
@@ -88,7 +87,6 @@ const images = {};
 
 // Renderizar en canvas
 const canvas = await brush(
-  { width: 800, height: 600 },
   template,
   images,
   {},
@@ -217,7 +215,6 @@ function brush<Context extends CanvasRenderingContext2D>(props: {
 
 ```typescript
 async function brush(
-  config: { width: number; height: number },
   template: Template,
   images: Record<string, HTMLImageElement | undefined>,
   filterText: Record<string, string | number | undefined>,
@@ -229,7 +226,6 @@ async function brush(
 
 ```typescript
 async function brush(
-  config: { width: number; height: number },
   template: Template,
   images: Record<string, Image>,
   filterText: Record<string, string | number | undefined>,
