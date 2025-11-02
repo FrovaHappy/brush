@@ -1,25 +1,25 @@
 {
-  "name": "@frova/brush",
-  "version": "0.0.1",
+  "name": "@frova_happy/brush",
+  "version": "0.0.2",
   "description": "Una librería de canvas universal que funciona tanto en el navegador como en Node.js",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/cjs/index.js"
     },
     "./web": {
+      "types": "./dist/types/web.d.ts",
       "import": "./dist/esm/web.js",
-      "require": "./dist/cjs/web.js",
-      "types": "./dist/types/web.d.ts"
+      "require": "./dist/cjs/web.js"
     },
     "./node": {
+      "types": "./dist/types/node.d.ts",
       "import": "./dist/esm/node.js",
-      "require": "./dist/cjs/node.js",
-      "types": "./dist/types/node.d.ts"
+      "require": "./dist/cjs/node.js"
     }
   },
   "files": [
@@ -29,11 +29,11 @@
   ],
   "scripts": {
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:types",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "esbuild src/index.ts src/web.ts src/node.ts --bundle --platform=node --format=cjs --outdir=dist/cjs --external:@napi-rs/canvas --external:zod",
+    "build:esm": "esbuild src/index.ts src/web.ts src/node.ts --bundle --platform=node --format=esm --outdir=dist/esm --external:@napi-rs/canvas --external:zod",
     "build:types": "tsc -p tsconfig.types.json",
     "clean": "rimraf dist",
-    "dev": "tsc --watch",
+    "dev": "esbuild src/index.ts src/web.ts src/node.ts --bundle --platform=node --format=esm --outdir=dist/esm --external:@napi-rs/canvas --external:zod --watch",
     "test": "echo \"No tests specified\"",
     "lint": "biome lint",
     "prepublishOnly": "npm run build",
@@ -58,6 +58,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.3.2",
     "@types/node": "24.9.2",
+    "esbuild": "0.25.12",
     "rimraf": "6.1.0",
     "typescript": "5.9.3"
   },

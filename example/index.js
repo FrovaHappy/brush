@@ -1,4 +1,4 @@
-const { brush, getImages } = require('@frova/brush/node');
+const { brush, getImages } = require('@frova_happy/brush/node');
 const fs = require('fs');
 
 async function main() {

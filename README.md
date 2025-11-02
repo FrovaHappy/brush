@@ -5,7 +5,7 @@ Una librería de canvas universal que funciona tanto en el navegador como en Nod
 ## Instalación
 
 ```bash
-npm install brush
+npm install @frova_happy/brush
 ```
 
 ## Uso Básico
@@ -13,7 +13,7 @@ npm install brush
 ### En el Navegador
 
 ```javascript
-import { brush } from 'brush/web';
+import { brush } from '@frova_happy/brush/web';
 
 // Definir una plantilla
 const template = {
@@ -59,7 +59,7 @@ document.body.appendChild(canvas);
 ### En Node.js
 
 ```javascript
-import { brush, getImages } from 'brush/node';
+import { brush, getImages } from '@frova_happy/brush/node';
 
 // Definir una plantilla
 const template = {
@@ -186,7 +186,7 @@ interface Filter {
 La librería incluye validación automática de plantillas usando Zod:
 
 ```javascript
-import { validateCanvas } from 'brush';
+import { validateCanvas } from '@frova_happy/brush';
 
 const result = validateCanvas(template);
 if (!result.ok) {
