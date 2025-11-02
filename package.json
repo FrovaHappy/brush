@@ -1,5 +1,5 @@
 {
-  "name": "brush",
+  "name": "@frova/brush",
   "version": "0.0.1",
   "description": "Una librería de canvas universal que funciona tanto en el navegador como en Node.js",
   "main": "./dist/cjs/index.js",
