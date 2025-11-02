@@ -2,7 +2,7 @@ import { type Templete, isShape, isText } from './validate'
 import brushShape from './brushShape'
 import brushText from './brushText'
 
-interface PaintCanvasProps<Context = any> {
+interface PaintCanvasProps<Context = CanvasRenderingContext2D> {
   ctx: Context
   template: Templete
   Path2D: typeof Path2D
