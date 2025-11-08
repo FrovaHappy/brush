@@ -5,9 +5,42 @@
  * Returns an object compatible with Shape.clip.
  */
 function getAttribute(tag: string, attr: string): string | null {
-  const regex = new RegExp(`${attr}="([^"]*)"`);
+  // Improved regex to handle escaped quotes and better attribute parsing
+  const regex = new RegExp(`${attr}\\s*=\\s*["']([^"']*)["']`);
   const match = tag.match(regex);
   return match ? match[1] : null;
+}
+
+/**
+ * Determines if an SVG element should be included in the clipping path.
+ * Elements are ignored if they are not visible (no fill and no stroke).
+ */
+function shouldIncludeElement(tag: string): boolean {
+  const fill = getAttribute(tag, 'fill');
+  const stroke = getAttribute(tag, 'stroke');
+
+  // Ignore elements that are not visible:
+  // - Both fill and stroke are "none"
+  // - fill is "none" and stroke is not declared or "none"
+  // - stroke is "none" and fill is not declared or "none"
+
+  const fillNone = fill === 'none';
+  const strokeNone = stroke === 'none';
+  const fillMissing = fill === null;
+  const strokeMissing = stroke === null;
+
+  // If fill is "none" and (stroke is missing or "none"), ignore
+  if (fillNone && (strokeMissing || strokeNone)) {
+    return false;
+  }
+
+  // If stroke is "none" and (fill is missing or "none"), ignore
+  if (strokeNone && (fillMissing || fillNone)) {
+    return false;
+  }
+
+  // Include all other cases (has visible fill or stroke)
+  return true;
 }
 
 export default function compileSVG(svg: string): { d: string; w: number; h: number } {
@@ -35,71 +68,83 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   // Handle <path> elements
   const pathTags = svg.match(/<path[^>]*>/g) || [];
   for (const tag of pathTags) {
-    const pathD = getAttribute(tag, 'd');
-    if (pathD) {
-      d += `${pathD} `;
+    if (shouldIncludeElement(tag)) {
+      const pathD = getAttribute(tag, 'd');
+      if (pathD) {
+        d += `${pathD} `;
+      }
     }
   }
 
   // Handle <circle> elements
   const circleTags = svg.match(/<circle[^>]*>/g) || [];
   for (const tag of circleTags) {
-    const cx = parseFloat(getAttribute(tag, 'cx') || '0');
-    const cy = parseFloat(getAttribute(tag, 'cy') || '0');
-    const r = parseFloat(getAttribute(tag, 'r') || '0');
-    if (r > 0) {
-      // Approximate circle as path
-      d += `M ${cx - r} ${cy} A ${r} ${r} 0 1 0 ${cx + r} ${cy} A ${r} ${r} 0 1 0 ${cx - r} ${cy} Z `;
+    if (shouldIncludeElement(tag)) {
+      const cx = parseFloat(getAttribute(tag, 'cx') || '0');
+      const cy = parseFloat(getAttribute(tag, 'cy') || '0');
+      const r = parseFloat(getAttribute(tag, 'r') || '0');
+      if (r > 0) {
+        // Approximate circle as path
+        d += `M ${cx - r} ${cy} A ${r} ${r} 0 1 0 ${cx + r} ${cy} A ${r} ${r} 0 1 0 ${cx - r} ${cy} Z `;
+      }
     }
   }
 
   // Handle <rect> elements
   const rectTags = svg.match(/<rect[^>]*>/g) || [];
   for (const tag of rectTags) {
-    const x = parseFloat(getAttribute(tag, 'x') || '0');
-    const y = parseFloat(getAttribute(tag, 'y') || '0');
-    const width = parseFloat(getAttribute(tag, 'width') || '0');
-    const height = parseFloat(getAttribute(tag, 'height') || '0');
-    if (width > 0 && height > 0) {
-      d += `M ${x} ${y} L ${x + width} ${y} L ${x + width} ${y + height} L ${x} ${y + height} Z `;
+    if (shouldIncludeElement(tag)) {
+      const x = parseFloat(getAttribute(tag, 'x') || '0');
+      const y = parseFloat(getAttribute(tag, 'y') || '0');
+      const width = parseFloat(getAttribute(tag, 'width') || '0');
+      const height = parseFloat(getAttribute(tag, 'height') || '0');
+      if (width > 0 && height > 0) {
+        d += `M ${x} ${y} L ${x + width} ${y} L ${x + width} ${y + height} L ${x} ${y + height} Z `;
+      }
     }
   }
 
   // Handle <ellipse> elements
   const ellipseTags = svg.match(/<ellipse[^>]*>/g) || [];
   for (const tag of ellipseTags) {
-    const cx = parseFloat(getAttribute(tag, 'cx') || '0');
-    const cy = parseFloat(getAttribute(tag, 'cy') || '0');
-    const rx = parseFloat(getAttribute(tag, 'rx') || '0');
-    const ry = parseFloat(getAttribute(tag, 'ry') || '0');
-    if (rx > 0 && ry > 0) {
-      // Approximate ellipse as path
-      d += `M ${cx - rx} ${cy} A ${rx} ${ry} 0 1 0 ${cx + rx} ${cy} A ${rx} ${ry} 0 1 0 ${cx - rx} ${cy} Z `;
+    if (shouldIncludeElement(tag)) {
+      const cx = parseFloat(getAttribute(tag, 'cx') || '0');
+      const cy = parseFloat(getAttribute(tag, 'cy') || '0');
+      const rx = parseFloat(getAttribute(tag, 'rx') || '0');
+      const ry = parseFloat(getAttribute(tag, 'ry') || '0');
+      if (rx > 0 && ry > 0) {
+        // Approximate ellipse as path
+        d += `M ${cx - rx} ${cy} A ${rx} ${ry} 0 1 0 ${cx + rx} ${cy} A ${rx} ${ry} 0 1 0 ${cx - rx} ${cy} Z `;
+      }
     }
   }
 
   // Handle <line> elements
   const lineTags = svg.match(/<line[^>]*>/g) || [];
   for (const tag of lineTags) {
-    const x1 = parseFloat(getAttribute(tag, 'x1') || '0');
-    const y1 = parseFloat(getAttribute(tag, 'y1') || '0');
-    const x2 = parseFloat(getAttribute(tag, 'x2') || '0');
-    const y2 = parseFloat(getAttribute(tag, 'y2') || '0');
-    d += `M ${x1} ${y1} L ${x2} ${y2} `;
+    if (shouldIncludeElement(tag)) {
+      const x1 = parseFloat(getAttribute(tag, 'x1') || '0');
+      const y1 = parseFloat(getAttribute(tag, 'y1') || '0');
+      const x2 = parseFloat(getAttribute(tag, 'x2') || '0');
+      const y2 = parseFloat(getAttribute(tag, 'y2') || '0');
+      d += `M ${x1} ${y1} L ${x2} ${y2} `;
+    }
   }
 
   // Handle <polygon> elements
   const polygonTags = svg.match(/<polygon[^>]*>/g) || [];
   for (const tag of polygonTags) {
-    const points = getAttribute(tag, 'points');
-    if (points) {
-      const coords = points.trim().split(/\s+/).map(p => p.split(',').map(Number));
-      if (coords.length > 0) {
-        d += `M ${coords[0][0]} ${coords[0][1]} `;
-        for (let i = 1; i < coords.length; i++) {
-          d += `L ${coords[i][0]} ${coords[i][1]} `;
+    if (shouldIncludeElement(tag)) {
+      const points = getAttribute(tag, 'points');
+      if (points) {
+        const coords = points.trim().split(/\s+/).map(p => p.split(',').map(Number));
+        if (coords.length > 0) {
+          d += `M ${coords[0][0]} ${coords[0][1]} `;
+          for (let i = 1; i < coords.length; i++) {
+            d += `L ${coords[i][0]} ${coords[i][1]} `;
+          }
+          d += 'Z ';
         }
-        d += 'Z ';
       }
     }
   }
@@ -107,15 +152,17 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   // Handle <polyline> elements
   const polylineTags = svg.match(/<polyline[^>]*>/g) || [];
   for (const tag of polylineTags) {
-    const points = getAttribute(tag, 'points');
-    if (points) {
-      const coords = points.trim().split(/\s+/).map(p => p.split(',').map(Number));
-      if (coords.length > 0) {
-        d += `M ${coords[0][0]} ${coords[0][1]} `;
-        for (let i = 1; i < coords.length; i++) {
-          d += `L ${coords[i][0]} ${coords[i][1]} `;
+    if (shouldIncludeElement(tag)) {
+      const points = getAttribute(tag, 'points');
+      if (points) {
+        const coords = points.trim().split(/\s+/).map(p => p.split(',').map(Number));
+        if (coords.length > 0) {
+          d += `M ${coords[0][0]} ${coords[0][1]} `;
+          for (let i = 1; i < coords.length; i++) {
+            d += `L ${coords[i][0]} ${coords[i][1]} `;
+          }
+          d += ' ';
         }
-        d += ' ';
       }
     }
   }
