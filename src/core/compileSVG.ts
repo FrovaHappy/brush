@@ -37,7 +37,7 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   for (const tag of pathTags) {
     const pathD = getAttribute(tag, 'd');
     if (pathD) {
-      d += pathD + ' ';
+      d += `${pathD} `;
     }
   }
 

@@ -2,10 +2,29 @@
 
 Una librería de canvas universal que funciona tanto en el navegador como en Node.js. Permite renderizar plantillas de dibujo con capas de texto y formas en un contexto de canvas.
 
+> ⚠️ **Aviso Importante**: Este proyecto está lejos de estar terminado y se mantiene únicamente en mis tiempos libres. Puede contener bugs, funcionalidades incompletas y cambios significativos en futuras versiones. Úsalo bajo tu propio riesgo. En próximos updates dejaré el código disponible en GitHub.
+
 ## Instalación
 
 ```bash
 npm install @frova_happy/brush
+```
+
+## Tipos TypeScript
+
+La librería incluye definiciones de tipos completas para TypeScript. Puedes importar los tipos de las siguientes maneras:
+
+```typescript
+// Importar tipos desde el paquete principal
+import type { Templete, Text, Shape, Filter } from '@frova_happy/brush';
+
+// Importar tipos desde entry points específicos
+import type { Templete } from '@frova_happy/brush/web';
+import type { Templete } from '@frova_happy/brush/node';
+
+// También puedes importar la función de validación con tipos
+import { validateCanvas } from '@frova_happy/brush';
+import type { Templete } from '@frova_happy/brush';
 ```
 
 ## Uso Básico
