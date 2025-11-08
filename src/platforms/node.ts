@@ -7,7 +7,7 @@ export async function getImages(imgUrl: string) {
   return img
 }
 
-export async function brush(template: Templete, images: Record<string, Image>, filterText: Record<string, string | number | undefined>, castColor: string | undefined): Promise<Canvas> {
+export function brush(template: Templete, images: Record<string, Image>, filterText: Record<string, string | number | undefined>, castColor: string | undefined): Canvas {
   const canvas = new Canvas(template.w, template.h);
   const ctx = canvas.getContext('2d');
   brushCore({

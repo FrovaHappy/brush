@@ -1,7 +1,7 @@
 import brushCore from "../core";
 import type { Templete } from "../core/validate";
 
-export async function brush(template: Templete, images: Record<string, HTMLImageElement | undefined>, filterText: Record<string, string | number | undefined>, castColor: string | undefined): Promise<HTMLCanvasElement> {
+export function brush(template: Templete, images: Record<string, HTMLImageElement | undefined>, filterText: Record<string, string | number | undefined>, castColor: string | undefined): HTMLCanvasElement {
   const canvas = document.createElement('canvas');
   canvas.width = template.w;
   canvas.height = template.h;
