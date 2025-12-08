@@ -1,25 +1,20 @@
 {
   "name": "@frova_happy/brush",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Una librería de canvas universal que funciona tanto en el navegador como en Node.js",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
+  "main": "./dist/node/index.cjs.js",
+  "module": "./dist/node/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
-    },
     "./web": {
       "types": "./dist/types/web.d.ts",
-      "import": "./dist/esm/web.js",
-      "require": "./dist/cjs/web.js"
+      "import": "./dist/web/index.js",
+      "require": "./dist/web/index.cjs.js"
     },
     "./node": {
       "types": "./dist/types/node.d.ts",
-      "import": "./dist/esm/node.js",
-      "require": "./dist/cjs/node.js"
+      "import": "./dist/node/index.js",
+      "require": "./dist/node/index.cjs.js"
     }
   },
   "files": [
@@ -28,17 +23,12 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:types",
-    "build:cjs": "esbuild src/index.ts src/web.ts src/node.ts --bundle --platform=node --format=cjs --outdir=dist/cjs --external:@napi-rs/canvas --external:zod",
-    "build:esm": "esbuild src/index.ts src/web.ts src/node.ts --bundle --platform=node --format=esm --outdir=dist/esm --external:@napi-rs/canvas --external:zod",
+    "build": "npm run clean && npm run build:js && npm run build:types",
+    "build:js": "node build.mjs",
     "build:types": "tsc -p tsconfig.types.json",
     "clean": "rimraf dist",
-    "dev": "esbuild src/index.ts src/web.ts src/node.ts --bundle --platform=node --format=esm --outdir=dist/esm --external:@napi-rs/canvas --external:zod --watch",
-    "test": "echo \"No tests specified\"",
     "lint": "biome lint",
-    "prepublishOnly": "npm run build",
-    "setup-test-env": "npm run build && npm link && cd example && npm install && npm link brush",
-    "test-env": "npm run setup-test-env && cd example && npm start"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "canvas",

@@ -271,6 +271,25 @@ async function brush(
 3. Ejecuta tests: `npm test`
 4. Construye: `npm run build`
 
+## Publicación
+
+Este proyecto utiliza GitHub Actions para publicar automáticamente a npm cuando se crea un tag de versión.
+
+### Configuración Inicial
+
+1. Ve a la configuración del repositorio en GitHub (Settings > Secrets and variables > Actions).
+2. Agrega un nuevo secreto llamado `NPM_TOKEN` con tu token de autenticación de npm.
+   - Obtén tu token en [npmjs.com](https://www.npmjs.com/settings/tokens) (tipo: Automation).
+
+### Crear una Nueva Versión
+
+1. Actualiza la versión en `package.json` (ej: `"version": "1.0.0"`).
+2. Crea un commit con los cambios: `git add . && git commit -m "Release v1.0.0"`.
+3. Crea un tag anotado: `git tag -a v1.0.0 -m "Release v1.0.0"`.
+4. Sube el tag: `git push origin v1.0.0`.
+
+El workflow de GitHub Actions se activará automáticamente y publicará el paquete a npm.
+
 ## Licencia
 
 Ver archivo LICENSE para detalles.
