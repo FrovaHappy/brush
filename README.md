@@ -217,19 +217,6 @@ if (!result.ok) {
 
 ## API
 
-### brush (Core)
-
-```typescript
-function brush<Context extends CanvasRenderingContext2D>(props: {
-  ctx: Context;
-  template: Template;
-  Path2D: typeof Path2D;
-  images: Record<string, HTMLImageElement | undefined>;
-  filterText: Record<string, string | number | undefined>;
-  castColor?: string;
-}): Context
-```
-
 ### brush (Web)
 
 ```typescript
@@ -254,8 +241,8 @@ async function brush(
 
 ## Dependencias
 
-- **Navegador**: Ninguna dependencia adicional
-- **Node.js**: Requiere `@napi-rs/canvas` para renderizado de canvas
+- **Navegador**: Requiere `zod` para validación de esquemas
+- **Node.js**: Requiere `@napi-rs/canvas` para renderizado de canvas y `zod` para validación de esquemas
 
 ## Limitaciones
 
@@ -270,25 +257,6 @@ async function brush(
 2. Instala dependencias: `npm install`
 3. Ejecuta tests: `npm test`
 4. Construye: `npm run build`
-
-## Publicación
-
-Este proyecto utiliza GitHub Actions para publicar automáticamente a npm cuando se crea un tag de versión.
-
-### Configuración Inicial
-
-1. Ve a la configuración del repositorio en GitHub (Settings > Secrets and variables > Actions).
-2. Agrega un nuevo secreto llamado `NPM_TOKEN` con tu token de autenticación de npm.
-   - Obtén tu token en [npmjs.com](https://www.npmjs.com/settings/tokens) (tipo: Automation).
-
-### Crear una Nueva Versión
-
-1. Actualiza la versión en `package.json` (ej: `"version": "1.0.0"`).
-2. Crea un commit con los cambios: `git add . && git commit -m "Release v1.0.0"`.
-3. Crea un tag anotado: `git tag -a v1.0.0 -m "Release v1.0.0"`.
-4. Sube el tag: `git push origin v1.0.0`.
-
-El workflow de GitHub Actions se activará automáticamente y publicará el paquete a npm.
 
 ## Licencia
 

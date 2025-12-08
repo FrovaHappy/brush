@@ -41,8 +41,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@napi-rs/canvas": "0.1.81",
-    "zod": "4.1.12"
+    "@napi-rs/canvas": "0.1.81"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.2",
@@ -52,11 +51,15 @@
     "typescript": "5.9.3"
   },
   "peerDependencies": {
-    "@napi-rs/canvas": "0.1.81"
+    "@napi-rs/canvas": "0.1.81",
+    "zod": "4.1.12"
   },
   "peerDependenciesMeta": {
     "@napi-rs/canvas": {
       "optional": true
+    },
+    "zod": {
+      "optional": false
     }
   },
   "engines": {
