@@ -3,20 +3,12 @@ import * as esbuild from 'esbuild';
 const builds = [
   // CJS builds
   {
-    entryPoints: ['src/web.ts'],
-    bundle: true,
-    platform: 'node',
-    format: 'cjs',
-    outfile: 'dist/web/index.cjs.js',
-    external: ['@napi-rs/canvas'],
-  },
-  {
     entryPoints: ['src/node.ts'],
     bundle: true,
     platform: 'node',
     format: 'cjs',
     outfile: 'dist/node/index.cjs.js',
-    external: ['@napi-rs/canvas'],
+    external: ['@napi-rs/canvas', 'zod'],
   },
   // ESM builds
   {
@@ -33,7 +25,7 @@ const builds = [
     platform: 'neutral',
     format: 'esm',
     outfile: 'dist/node/index.js',
-    external: ['@napi-rs/canvas'],
+    external: ['@napi-rs/canvas', 'zod'],
   },
 ];
 
