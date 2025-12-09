@@ -1,23 +1,16 @@
 import * as esbuild from 'esbuild';
+import { stat } from 'fs/promises';
 
 const builds = [
-  // CJS builds
-  {
-    entryPoints: ['src/node.ts'],
-    bundle: true,
-    platform: 'node',
-    format: 'cjs',
-    outfile: 'dist/node/index.cjs.js',
-    external: ['@napi-rs/canvas', 'zod'],
-  },
   // ESM builds
   {
     entryPoints: ['src/web.ts'],
     bundle: true,
-    platform: 'neutral',
+    platform: 'browser',
     format: 'esm',
+    minify: true,
     outfile: 'dist/web/index.js',
-    external: ['@napi-rs/canvas', 'zod'],
+    external: ['@napi-rs/canvas'],
   },
   {
     entryPoints: ['src/node.ts'],
@@ -30,10 +23,17 @@ const builds = [
 ];
 
 async function runBuilds() {
+  let totalSize = 0;
   for (const config of builds) {
-    console.log(`Building ${config.entryPoints[0]} to ${config.outdir}...`);
+    console.log(`Building ${config.entryPoints[0]} to ${config.outfile}...`);
     await esbuild.build(config);
+    const stats = await stat(config.outfile);
+    const sizeKB = (stats.size / 1024).toFixed(2);
+    console.log(`Built ${config.outfile}, size: ${sizeKB} KB`);
+    totalSize += stats.size;
   }
+  const totalSizeKB = (totalSize / 1024).toFixed(2);
+  console.log(`Total compiled size: ${totalSizeKB} KB`);
   console.log('All builds completed.');
 }
 

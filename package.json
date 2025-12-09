@@ -2,7 +2,6 @@
   "name": "@frova_happy/brush",
   "version": "0.0.8",
   "description": "Una librería de canvas universal que funciona tanto en el navegador como en Node.js",
-  "main": "./dist/node/index.cjs.js",
   "module": "./dist/node/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
@@ -12,8 +11,7 @@
     },
     "./node": {
       "types": "./dist/types/node.d.ts",
-      "import": "./dist/node/index.js",
-      "require": "./dist/node/index.cjs.js"
+      "import": "./dist/node/index.js"
     }
   },
   "files": [
@@ -26,6 +24,9 @@
     "build:js": "node build.mjs",
     "build:types": "tsc -p tsconfig.types.json",
     "clean": "rimraf dist",
+    "dev": "node build.mjs && tsc -p tsconfig.types.json && npm link && cd example/node && npm link @frova_happy/brush && cd ../react && npm link @frova_happy/brush",
+    "dev:html": "npm run build && npx http-server@14.1.1 . -p 3000 -o /example/html/index.html",
+    "dev:node": "npm run build && cd example/node && node index.js",
     "lint": "biome lint",
     "prepublishOnly": "npm run build"
   },
@@ -41,7 +42,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@napi-rs/canvas": "0.1.81"
+    "@napi-rs/canvas": "0.1.81",
+    "zod": "4.1.12"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.2",
@@ -50,18 +52,8 @@
     "rimraf": "6.1.0",
     "typescript": "5.9.3"
   },
-  "peerDependencies": {
-    "@napi-rs/canvas": "0.1.81",
-    "zod": "4.1.12"
-  },
-  "peerDependenciesMeta": {
-    "@napi-rs/canvas": {
-      "optional": true
-    },
-    "zod": {
-      "optional": false
-    }
-  },
+  "peerDependencies": {},
+  "peerDependenciesMeta": {},
   "engines": {
     "node": ">=16.0.0"
   }

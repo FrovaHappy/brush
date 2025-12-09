@@ -241,8 +241,7 @@ async function brush(
 
 ## Dependencias
 
-- **Navegador**: Requiere `zod` para validación de esquemas
-- **Node.js**: Requiere `@napi-rs/canvas` para renderizado de canvas y `zod` para validación de esquemas
+La librería incluye todas las dependencias necesarias automáticamente. No se requieren instalaciones adicionales.
 
 ## Limitaciones
 
