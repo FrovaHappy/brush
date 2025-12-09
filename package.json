@@ -1,6 +1,6 @@
 {
   "name": "@frova_happy/brush",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Una librería de canvas universal que funciona tanto en el navegador como en Node.js",
   "module": "./dist/node/index.js",
   "types": "./dist/types/index.d.ts",
