@@ -13,6 +13,7 @@ function App() {
       {
         id: 'texto1',
         type: 'text',
+        family: 'Science-Gothic',
         dx: 50,
         dy: 50,
         text: 'Hola desde React',
@@ -36,7 +37,11 @@ function App() {
       try {
         const mod = await import('https://unpkg.com/@frova_happy/brush@latest/dist/web/index.js');
         const { brush } = mod;
-        const canvas = await brush({ template, images: {}, filterText: {}, castColor: undefined, fonts: [] });
+        const canvas = await brush({
+          template, images: {}, filterText: {}, castColor: undefined, fonts: [
+            { name: 'Science-Gothic', url: 'https://fonts.gstatic.com/s/sciencegothic/v5/CHydV-7EH1X7aiQh5jPNDTJnVUAvhrL0sQdjzDQhk11iTp6mX-ANuf1d_83dPfZJ7Lvcvg8EGYzcW7TqdtQ.woff2' }
+          ]
+        });
         if (canvasRef.current) {
           canvasRef.current.innerHTML = '';
           canvasRef.current.appendChild(canvas);

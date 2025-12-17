@@ -1,10 +1,13 @@
 {
   "name": "@frova_happy/brush",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Una librería de canvas universal que funciona tanto en el navegador como en Node.js",
-  "module": "./dist/node/index.js",
-  "types": "./dist/types/index.d.ts",
+  "type": "module",
   "exports": {
+    ".": {
+      "types": "./dist/types/node.d.ts",
+      "import": "./dist/node/index.js"
+    },
     "./web": {
       "types": "./dist/types/web.d.ts",
       "import": "./dist/web/index.js"
@@ -26,8 +29,8 @@
     "clean": "rimraf dist",
     "dev": "node build.mjs && tsc -p tsconfig.types.json && npm link && cd example/node && npm link @frova_happy/brush && cd ../react && npm link @frova_happy/brush",
     "dev:html": "npm run build && npx http-server@14.1.1 . -p 3000 -o /example/html/index.html",
-    "dev:react": "npm run build && npm link && cd example/react && npm link @frova_happy/brush && npm install && npm run dev",
-    "dev:node": "npm run build && cd example/node && node index.js",
+    "dev:react": "cd example/react && npm install && npm run dev",
+    "dev:node": "npm run build && npm link && cd example/node && npm install && npm link @frova_happy/brush && npm run start",
     "lint": "biome lint",
     "prepublishOnly": "npm run build"
   },

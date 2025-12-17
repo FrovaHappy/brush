@@ -11,6 +11,7 @@ const template = {
     {
       id: 'texto1',
       type: 'text',
+      family: 'Science-Gothic',
       dx: 50,
       dy: 50,
       text: 'Hola desde Node.js',
@@ -31,7 +32,18 @@ const template = {
 
 async function main() {
   try {
-    const canvas = await brush(template, {}, {}, undefined);
+    const canvas = await brush({
+      template,
+      images: {},
+      filterText: {},
+      castColor: undefined,
+      fonts: [
+        {
+          name: 'Science-Gothic',
+          url: 'https://fonts.gstatic.com/s/sciencegothic/v5/CHydV-7EH1X7aiQh5jPNDTJnVUAvhrL0sQdjzDQhk11iTp6mX-ANuf1d_83dPfZJ7Lvcvg8EGYzcW7TqdtQ.woff2'
+        }
+      ]
+    });
     // En Node.js, canvas es un objeto Canvas de @napi-rs/canvas
     const buffer = canvas.toBuffer('image/png');
     writeFileSync('output.png', buffer);
