@@ -19,9 +19,10 @@ jobs:
           fetch-tags: true
 
       - name: Verify commit is on `main` and tagged `v*`
+        id: verify
         shell: bash
         run: |
-          set -euo pipefail
+          set -uo pipefail
           git fetch --prune --tags origin main
           # resolve commit SHA (handles annotated tags)
           if commit_sha=$(git rev-parse --verify "${GITHUB_REF}^{}" 2>/dev/null); then
@@ -34,30 +35,36 @@ jobs:
           tag=$(git tag --points-at "$commit_sha" --list 'v*' | head -n1 || true)
           if [ -z "$tag" ]; then
             echo "No tag matching v* points at commit $commit_sha"
-            exit 1
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
           echo "Found tag: $tag"
           # check commit is contained in origin/main
           if git merge-base --is-ancestor "$commit_sha" origin/main; then
             echo "Commit $commit_sha is in origin/main"
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
           else
             echo "Commit $commit_sha is not in origin/main"
-            exit 1
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Setup Node.js
+        if: ${{ steps.verify.outputs.should_publish == 'true' }}
         uses: actions/setup-node@v4
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
+        if: ${{ steps.verify.outputs.should_publish == 'true' }}
         run: npm ci
 
       - name: Build package
+        if: ${{ steps.verify.outputs.should_publish == 'true' }}
         run: npm run build
 
       - name: Publish to npm
+        if: ${{ steps.verify.outputs.should_publish == 'true' }}
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
