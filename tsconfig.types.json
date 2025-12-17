@@ -3,6 +3,13 @@
   "compilerOptions": {
     "declaration": true,
     "declarationMap": false,
+    "isolatedModules": false,
+    "module": "esnext",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "emitDeclarationOnly": true,
     "outDir": "./dist/types"
   }

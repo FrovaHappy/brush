@@ -26,6 +26,7 @@
     "clean": "rimraf dist",
     "dev": "node build.mjs && tsc -p tsconfig.types.json && npm link && cd example/node && npm link @frova_happy/brush && cd ../react && npm link @frova_happy/brush",
     "dev:html": "npm run build && npx http-server@14.1.1 . -p 3000 -o /example/html/index.html",
+    "dev:react": "npm run build && npm link && cd example/react && npm link @frova_happy/brush && npm install && npm run dev",
     "dev:node": "npm run build && cd example/node && node index.js",
     "lint": "biome lint",
     "prepublishOnly": "npm run build"

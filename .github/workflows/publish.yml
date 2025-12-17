@@ -2,6 +2,8 @@ name: Publish to npm
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -12,6 +14,36 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Verify commit is on `main` and tagged `v*`
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --prune --tags origin main
+          # resolve commit SHA (handles annotated tags)
+          if commit_sha=$(git rev-parse --verify "${GITHUB_REF}^{}" 2>/dev/null); then
+            :
+          else
+            commit_sha="${GITHUB_SHA}"
+          fi
+          echo "Commit to verify: $commit_sha"
+          # check tag pointing at commit
+          tag=$(git tag --points-at "$commit_sha" --list 'v*' | head -n1 || true)
+          if [ -z "$tag" ]; then
+            echo "No tag matching v* points at commit $commit_sha"
+            exit 1
+          fi
+          echo "Found tag: $tag"
+          # check commit is contained in origin/main
+          if git merge-base --is-ancestor "$commit_sha" origin/main; then
+            echo "Commit $commit_sha is in origin/main"
+          else
+            echo "Commit $commit_sha is not in origin/main"
+            exit 1
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

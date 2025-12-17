@@ -10,6 +10,7 @@ const template = {
     {
       id: 'texto1',
       type: 'text',
+      family: 'ScienceGothic',
       dx: 50,
       dy: 50,
       text: 'Hola desde HTML',
@@ -30,7 +31,15 @@ const template = {
 
 async function init() {
   try {
-    const canvas = await brush(template, {}, {}, undefined);
+    const canvas = await brush({
+      template,
+      images: {},
+      filterText: {},
+      castColor: undefined,
+      fonts: [
+        { url: '/example/html/ScienceGothic.ttf', name: 'ScienceGothic' }
+      ]
+    });
     document.getElementById('canvas-container').appendChild(canvas);
     console.log('Canvas renderizado exitosamente');
   } catch (error) {

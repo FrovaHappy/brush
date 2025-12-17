@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { brush } from '@brush';
 
 function App() {
   const canvasRef = useRef(null);
@@ -35,7 +34,9 @@ function App() {
   useEffect(() => {
     async function renderCanvas() {
       try {
-        const canvas = await brush(template, {}, {}, undefined);
+        const mod = await import('https://unpkg.com/@frova_happy/brush@latest/dist/web/index.js');
+        const { brush } = mod;
+        const canvas = await brush({ template, images: {}, filterText: {}, castColor: undefined, fonts: [] });
         if (canvasRef.current) {
           canvasRef.current.innerHTML = '';
           canvasRef.current.appendChild(canvas);

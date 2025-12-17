@@ -4,6 +4,15 @@ Una librería de canvas universal que funciona tanto en el navegador como en Nod
 
 > ⚠️ **Aviso Importante**: Este proyecto está lejos de estar terminado y se mantiene únicamente en mis tiempos libres. Puede contener bugs, funcionalidades incompletas y cambios significativos en futuras versiones. Úsalo bajo tu propio riesgo. En próximos updates dejaré el código disponible en GitHub.
 
+## Novedad reciente, Carga de fuentes
+Ahora puedes cargar fuentes personalizadas en ambos entornos (navegador y Node.js) al renderizar tus plantillas. Simplemente proporciona un array de URLs de fuentes al llamar a la función `brush`.
+
+## Repositorio en GitHub
+
+El código fuente ya está disponible en GitHub: https://github.com/FrovaHappy/brush
+
+Puedes abrir issues, crear pull requests o hacer fork para contribuir. Si te gusta el proyecto, considera darle star.
+
 ## Instalación
 
 ```bash

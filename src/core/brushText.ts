@@ -13,7 +13,13 @@ export default function brushText(options: PaintTextProps) {
   const { ctx, layer, filterText, castColor } = options
   const color = !!castColor && layer.color === 'auto' ? castColor : layer.color
   let text = replaceAllValues(layer.text, filterText)
+  // Prepare font settings before measuring text
+  const fam = layer.family ?? 'sans-serif'
+  const family = fam.includes(' ') ? `"${fam}"` : fam
+  const weight = layer.weight ?? 400
+  const size = layer.size ?? 16
   ctx.save() // save the current state of the canvas
+  ctx.font = `${weight} ${size}px ${family}`
   let widthText = ctx.measureText(text).width
 
   if (layer.maxWidth !== 0 && layer.maxWidth) {
@@ -24,7 +30,6 @@ export default function brushText(options: PaintTextProps) {
   }
   // Global Settings
   ctx.globalAlpha = layer.globalAlpha ?? 1
-  ctx.font = `${layer.weight} ${layer.size}px ${layer.family}`
   ctx.textAlign = layer.align ?? 'start'
   ctx.textBaseline = layer.baseline ?? 'alphabetic'
   ctx.fillStyle = color ?? '#000'
