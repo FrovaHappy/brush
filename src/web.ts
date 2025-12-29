@@ -1,5 +1,6 @@
 import brushCore from "./core";
-import type { Templete } from "./core/validate";
+import { isShape, type Templete } from "./core/validate";
+import { replaceAllValues } from "./platforms/utils";
 import { Font } from "./types";
 
 export async function setFont(fonts: Font[], template: Templete): Promise<void> {
@@ -29,20 +30,34 @@ export async function setFont(fonts: Font[], template: Templete): Promise<void> 
 }
 interface BrushProps {
   template: Templete,
-  images: Record<string, HTMLImageElement | undefined>,
   filterText: Record<string, string | number | undefined>,
   castColor: string | undefined,
   fonts?: Font[]
 }
 
 export async function brush(props: BrushProps): Promise<HTMLCanvasElement> {
-  const { template, images, filterText, castColor, fonts = [] } = props;
+  const { template, filterText, castColor, fonts = [] } = props;
   await setFont(fonts, template);
   const canvas = document.createElement('canvas');
   canvas.width = template.w;
   canvas.height = template.h;
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Could not get 2D context from canvas');
+
+  const images: Record<string, HTMLImageElement | undefined> = {};
+  for (const layer of template.layers) {
+    if (isShape(layer) && layer.image) {
+      try {
+        const img = new Image();
+        const url = replaceAllValues(layer.image, filterText);
+        img.src = url;
+        await img.decode();
+        images[layer.id] = img;
+      } catch (error) {
+        console.error(`Failed to load image for layer ${layer.id}:`, error);
+      }
+    }
+  }
   brushCore({
     ctx,
     template,
@@ -54,4 +69,4 @@ export async function brush(props: BrushProps): Promise<HTMLCanvasElement> {
   return canvas;
 }
 
-export type { Templete, Text, Shape, Filter } from './core/validate';
+export { type Templete, type Text, type Shape, type Filter, isShape, isText } from './core/validate';

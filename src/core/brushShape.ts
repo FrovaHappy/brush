@@ -38,34 +38,28 @@ export default function brushShape(props: PaintShapeProps) {
     ctx.fillRect(0, 0, patch.w, patch.h)
 
     if (image) {
-      // Calculate image scaling to fit within the clip path dimensions
+      // Fit image into the clip patch while preserving aspect ratio
+      const scale = Math.min(patch.w / image.width, patch.h / image.height)
       const scaleImage = {
-        w: (image.width * patch.w) / Math.min(image.width, image.height),
-        h: (image.height * patch.h) / Math.min(image.width, image.height),
+        w: Math.round(image.width * scale),
+        h: Math.round(image.height * scale),
       }
-      const middle = {
-        w: Math.round((patch.w - scaleImage.w) / 2),
-        h: Math.round((patch.h - scaleImage.h) / 2),
-      }
-      const aligns = {
-        top: [middle.w, 0],
-        button: [middle.w, patch.h - scaleImage.h],
-        left: [0, middle.h],
-        right: [0, 0],
-        center: [middle.w, middle.h],
+      const offsetX = Math.round((patch.w - scaleImage.w) / 2)
+      const offsetY = Math.round((patch.h - scaleImage.h) / 2)
+      const aligns: Record<string, [number, number]> = {
+        top: [offsetX, 0],
+        bottom: [offsetX, patch.h - scaleImage.h],
+        left: [0, offsetY],
+        right: [patch.w - scaleImage.w, offsetY],
+        center: [offsetX, offsetY],
         'top-left': [0, 0],
         'top-right': [patch.w - scaleImage.w, 0],
         'bottom-left': [0, patch.h - scaleImage.h],
         'bottom-right': [patch.w - scaleImage.w, patch.h - scaleImage.h],
       }
 
-      ctx.drawImage(
-        image,
-        aligns[patch.align ?? 'center'][0],
-        aligns[patch.align ?? 'center'][1],
-        scaleImage.w,
-        scaleImage.h
-      )
+      const chosen = aligns[patch.align ?? 'center'] || aligns.center
+      ctx.drawImage(image, chosen[0], chosen[1], scaleImage.w, scaleImage.h)
     }
     ctx.restore()
   } else {

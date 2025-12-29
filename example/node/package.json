@@ -4,5 +4,7 @@
   "scripts": {
     "start": "node index.js"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@frova_happy/brush": "file:../../"
+  }
 }

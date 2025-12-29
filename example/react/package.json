@@ -7,7 +7,8 @@
   },
   "dependencies": {
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "@frova_happy/brush": "file:../../"
   },
   "devDependencies": {
     "@types/react": "19.2.7",

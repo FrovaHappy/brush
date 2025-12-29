@@ -72,15 +72,7 @@ const shapeSchema = z
     dy: z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS)),
     dh: z.optional(z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS))),
     dw: z.optional(z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS))),
-    image: z.optional(
-      z.union([
-        z.url().check(z.regex(/^https?:\/\/.+\.(png|jpg|jpeg|webp|gif|svg)$/)),
-        z.literal('{{user_avatar}}'),
-        z.literal('{{user_banner}}'),
-        z.literal('{{server_avatar}}'),
-        z.literal('{{server_banner}}'),
-      ])
-    ),
+    image: z.optional(z.string().check(z.minLength(1), z.maxLength(1000))),
     // imageSmoothingEnabled: z.boolean().optional(), // TODO: for implement
     // imageSmoothingQuality: z.union([z.literal('low'), z.literal('medium'), z.literal('high')]).optional(), // TODO: for implement
     clip: z.optional(
@@ -92,7 +84,7 @@ const shapeSchema = z
             z.literal('left'),
             z.literal('right'),
             z.literal('center'),
-            z.literal('button'),
+            z.literal('bottom'),
             z.literal('top-left'),
             z.literal('top-right'),
             z.literal('bottom-left'),

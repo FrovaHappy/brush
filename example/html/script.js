@@ -20,11 +20,19 @@ const template = {
     {
       id: 'forma1',
       type: 'shape',
-      dx: 150,
-      dy: 150,
+      dx: 100,
+      dy: 100,
       dw: 100,
       dh: 100,
       color: '#00ff00'
+    },
+    {
+      id: 'forma2',
+      type: 'shape',
+      dx: 250,
+      dy: 150,
+      dw: 80,
+
     }
   ]
 };

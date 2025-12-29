@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { brush } from '@frova_happy/brush/web';
 
 function App() {
   const canvasRef = useRef(null);
@@ -35,10 +36,8 @@ function App() {
   useEffect(() => {
     async function renderCanvas() {
       try {
-        const mod = await import('https://unpkg.com/@frova_happy/brush@latest/dist/web/index.js');
-        const { brush } = mod;
         const canvas = await brush({
-          template, images: {}, filterText: {}, castColor: undefined, fonts: [
+          template, filterText: {}, castColor: undefined, fonts: [
             { name: 'Science-Gothic', url: 'https://fonts.gstatic.com/s/sciencegothic/v5/CHydV-7EH1X7aiQh5jPNDTJnVUAvhrL0sQdjzDQhk11iTp6mX-ANuf1d_83dPfZJ7Lvcvg8EGYzcW7TqdtQ.woff2' }
           ]
         });
