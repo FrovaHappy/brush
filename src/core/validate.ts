@@ -1,8 +1,5 @@
 import { ZodError } from 'zod'
 import * as z from 'zod/mini'
-
-
-export const MAX_WIDTH_CANVAS = 2000
 export const LAST_VERSION = '1'
 
 
@@ -13,9 +10,9 @@ const filterSchema = z.object({
   contrast: z.optional(z.number().check(z.gte(-100), z.lte(100), z.multipleOf(1))),
   dropShadow: z.optional(
     z.object({
-      offsetX: z.optional(z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS))),
-      offsetY: z.optional(z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS))),
-      blurRadius: z.optional(z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS))),
+      offsetX: z.optional(z.number().check(z.gte(0))),
+      offsetY: z.optional(z.number().check(z.gte(0))),
+      blurRadius: z.optional(z.number().check(z.gte(0))),
       color: z.string().check(z.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/)),
     })
   ),
@@ -32,15 +29,15 @@ const filterSchema = z.object({
 const textSchema = z.object({
   id: z.string().check(z.minLength(1), z.maxLength(100)),
   type: z.literal('text'),
-  dx: z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS)),
-  dy: z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS)),
-  text: z.string().check(z.minLength(1), z.maxLength(MAX_WIDTH_CANVAS)),
-  size: z.optional(z.number().check(z.gte(10), z.lte(MAX_WIDTH_CANVAS * 3))),
+  dx: z.number().check(z.gte(0)),
+  dy: z.number().check(z.gte(0)),
+  text: z.string().check(z.minLength(1)),
+  size: z.optional(z.number().check(z.gte(10))),
   family: z.optional(z.string().check(z.minLength(1), z.maxLength(100))),
   color: z.optional(z.union([z.string().check(z.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/)), z.literal('auto')])),
   globalAlpha: z.optional(z.number().check(z.gte(0), z.lte(1), z.multipleOf(0.01))),
-  letterSpacing: z.optional(z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS))),
-  maxWidth: z.optional(z.number().check(z.gte(1), z.lte(MAX_WIDTH_CANVAS))),
+  letterSpacing: z.optional(z.number().check(z.gte(0))),
+  maxWidth: z.optional(z.number().check(z.gte(1))),
   weight: z.optional(z.number().check(z.gte(200), z.lte(1000), z.multipleOf(100))),
   align: z.optional(
     z.union([
@@ -68,10 +65,10 @@ const shapeSchema = z
     id: z.string().check(z.minLength(1), z.maxLength(100)),
     type: z.literal('shape'),
     color: z.optional(z.union([z.string().check(z.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/)), z.literal('auto')])),
-    dx: z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS)),
-    dy: z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS)),
-    dh: z.optional(z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS))),
-    dw: z.optional(z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS))),
+    dx: z.number().check(z.gte(0)),
+    dy: z.number().check(z.gte(0)),
+    dh: z.optional(z.number().check(z.gte(0))),
+    dw: z.optional(z.number().check(z.gte(0))),
     image: z.optional(z.string().check(z.minLength(1), z.maxLength(1000))),
     // imageSmoothingEnabled: z.boolean().optional(), // TODO: for implement
     // imageSmoothingQuality: z.union([z.literal('low'), z.literal('medium'), z.literal('high')]).optional(), // TODO: for implement
@@ -103,8 +100,8 @@ const canvasSchema = z.object({
   author: z.optional(z.string().check(z.minLength(10), z.maxLength(100))),
   forked: z.optional(z.string().check(z.minLength(1), z.maxLength(100))),
   visibility: z.optional(z.union([z.literal('public'), z.literal('private')])),
-  h: z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS)),
-  w: z.number().check(z.gte(0), z.lte(MAX_WIDTH_CANVAS)),
+  h: z.number().check(z.gte(0)),
+  w: z.number().check(z.gte(0)),
   bg_color: z.optional(z.union([z.string().check(z.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/)), z.literal('transparent')])),
   layer_cast_color: z.optional(z.string()),
   layers: z.array(z.union([textSchema, shapeSchema])),

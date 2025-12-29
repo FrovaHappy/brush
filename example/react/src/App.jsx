@@ -7,7 +7,7 @@ function App() {
   const template = {
     version: '1',
     title: 'Ejemplo React',
-    w: 400,
+    w: 500,
     h: 300,
     bg_color: '#e0e0e0',
     layers: [

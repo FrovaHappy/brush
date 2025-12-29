@@ -1,4 +1,4 @@
-import { type Templete, isShape, isText } from './validate'
+import { type Templete, isShape, isText, validateCanvas } from './validate'
 import brushShape from './brushShape'
 import brushText from './brushText'
 
@@ -16,6 +16,12 @@ interface PaintCanvasProps<Context = CanvasRenderingContext2D> {
 export default function brush<Context extends CanvasRenderingContext2D>(props: PaintCanvasProps<Context>) {
   const { ctx, template, Path2D, filterText, images, castColor } = props
   const { layers, ...base } = template
+  // validate template 
+  const validation = validateCanvas(template)
+  if (!validation.ok) {
+    throw new Error(`Invalid template: ${JSON.stringify(validation.errors)}`)
+  }
+
   ctx.clearRect(0, 0, base.w, base.h) // reset canvas in the Frontend
   ctx.save()
   if (base.bg_color) {

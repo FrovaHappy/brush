@@ -28,7 +28,7 @@
     "build:types": "tsc -p tsconfig.types.json",
     "clean": "rimraf dist",
     "dev:html": "npm run build && npx http-server@14.1.1 . -p 3000 -o /example/html/index.html",
-    "dev:react": "cd example/react && npm install && npm run dev",
+    "dev:react": "npm run build && cd example/react && npm install && npm run dev",
     "dev:node": "npm run build && cd example/node && npm install && npm run start",
     "lint": "biome lint",
     "prepublishOnly": "npm run build"
