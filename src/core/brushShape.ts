@@ -1,18 +1,19 @@
-import type { Shape } from './validate'
+import type { Colors, Shape } from './validate'
 import { buildFilter } from './buildFilter'
 import compileSVG from './compileSVG'
+import { getColor } from '../platforms/utils'
 
 interface PaintShapeProps {
   ctx: CanvasRenderingContext2D
   layer: Shape
   image: HTMLImageElement | undefined
-  castColor: string | undefined
+  colors: Colors
   Path2D: typeof Path2D
 }
 
 export default function brushShape(props: PaintShapeProps) {
-  const { ctx, layer, Path2D, image, castColor } = props
-  const color = !!castColor && layer.color === 'auto' ? castColor : layer.color
+  const { ctx, layer, Path2D, image, colors } = props
+  const color = getColor(layer.color, colors)
   const clip = layer.clip
   const filter = buildFilter(layer.filter)
   ctx.save()

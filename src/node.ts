@@ -62,7 +62,6 @@ export async function brush(props: BrushProps): Promise<Canvas> {
     Path2D: Path2D as unknown as typeof globalThis.Path2D,
     images: images as unknown as Record<string, HTMLImageElement | undefined>,
     filterText,
-    castColor
   });
   return canvas;
 }

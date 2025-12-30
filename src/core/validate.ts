@@ -2,8 +2,6 @@ import { ZodError } from 'zod'
 import * as z from 'zod/mini'
 export const LAST_VERSION = '1'
 
-
-
 const filterSchema = z.object({
   blur: z.optional(z.number().check(z.gte(0), z.lte(100), z.multipleOf(1))),
   brightness: z.optional(z.number().check(z.gte(-100), z.lte(100), z.multipleOf(1))),
@@ -93,6 +91,18 @@ const shapeSchema = z
     filter: z.optional(filterSchema),
   })
 
+const COLOR_REGEX = /^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|rgba?\(.+\)|hsl?\(.+\))$/
+const colorBaseSchema = z.union([z.string().check(z.regex(COLOR_REGEX)), z.literal('transparent')])
+const colorsBaseSchema = z.object({
+  primary: z.optional(colorBaseSchema),
+  secondary: z.optional(colorBaseSchema),
+  accent: z.optional(colorBaseSchema),
+  background: z.optional(colorBaseSchema),
+  foreground: z.optional(colorBaseSchema),
+})
+
+const colorSchema = z.optional(z.union([z.keyof(colorsBaseSchema), colorBaseSchema]))
+
 const canvasSchema = z.object({
   id: z.optional(z.string().check(z.minLength(10), z.maxLength(100))),
   version: z.literal('1'),
@@ -102,8 +112,7 @@ const canvasSchema = z.object({
   visibility: z.optional(z.union([z.literal('public'), z.literal('private')])),
   h: z.number().check(z.gte(0)),
   w: z.number().check(z.gte(0)),
-  bg_color: z.optional(z.union([z.string().check(z.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/)), z.literal('transparent')])),
-  layer_cast_color: z.optional(z.string()),
+  colors: colorsBaseSchema,
   layers: z.array(z.union([textSchema, shapeSchema])),
 })
 
@@ -112,6 +121,9 @@ export type Templete = z.infer<typeof canvasSchema>
 export type Text = z.infer<typeof textSchema>
 export type Shape = z.infer<typeof shapeSchema>
 export type Filter = z.infer<typeof filterSchema>
+export type Colors = z.infer<typeof colorsBaseSchema>
+export type Color = z.infer<typeof colorSchema>
+
 
 export function isText(layer: Text | Shape): layer is Text {
   return layer.type === 'text'

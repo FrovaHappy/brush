@@ -1,3 +1,4 @@
+import { Colors } from "../core/validate";
 
 /**
  * 
@@ -19,4 +20,11 @@ export function replaceAllValues(
     result = result.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
   }
   return result;
+}
+
+export function getColor(color: string | undefined, colors: Colors): string {
+  if (!color) return '#000000';
+
+  const colorValue = (colors as any)[color] || color;
+  return colorValue;
 }

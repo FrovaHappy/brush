@@ -31,12 +31,11 @@ export async function setFont(fonts: Font[], template: Templete): Promise<void> 
 interface BrushProps {
   template: Templete,
   filterText: Record<string, string | number | undefined>,
-  castColor: string | undefined,
   fonts?: Font[]
 }
 
 export async function brush(props: BrushProps): Promise<HTMLCanvasElement> {
-  const { template, filterText, castColor, fonts = [] } = props;
+  const { template, filterText, fonts = [] } = props;
   await setFont(fonts, template);
   const canvas = document.createElement('canvas');
   canvas.width = template.w;
@@ -64,7 +63,6 @@ export async function brush(props: BrushProps): Promise<HTMLCanvasElement> {
     Path2D: window.Path2D,
     images,
     filterText,
-    castColor
   });
   return canvas;
 }

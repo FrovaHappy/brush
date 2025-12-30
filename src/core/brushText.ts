@@ -1,17 +1,17 @@
-import type { Text } from './validate'
+import type { Colors, Text } from './validate'
 import { buildFilter } from './buildFilter'
-import { replaceAllValues } from '../platforms/utils'
+import { getColor, replaceAllValues } from '../platforms/utils'
 
 interface PaintTextProps {
   ctx: CanvasRenderingContext2D
   layer: Text
   filterText: Record<string, string | number | undefined>
-  castColor: string | undefined
+  colors: Colors
 }
 
 export default function brushText(options: PaintTextProps) {
-  const { ctx, layer, filterText, castColor } = options
-  const color = !!castColor && layer.color === 'auto' ? castColor : layer.color
+  const { ctx, layer, filterText, colors } = options
+  const color = getColor(layer.color, colors)
   let text = replaceAllValues(layer.text, filterText)
   // Prepare font settings before measuring text
   const fam = layer.family ?? 'sans-serif'
