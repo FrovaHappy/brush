@@ -28,7 +28,6 @@ const template = { /* ... */ };
 const canvas = await brush({
   template,                 // plantilla (obligatorio)
   filterText: {},           // valores para plantillas (opcional)
-  castColor: undefined,     // color de capa (opcional)
   fonts: [                  // array de fuentes para preload (opcional)
     { name: 'Science-Gothic', url: '/example/html/ScienceGothic.ttf' }
   ]
@@ -49,7 +48,6 @@ try {
   const canvas = await brush({
     template,
     filterText: {},
-    castColor: undefined,
     fonts: [
       { name: 'Science-Gothic', url: 'https://.../Science-Gothic.woff2' }
     ]
@@ -81,10 +79,41 @@ interface Template {
   title: string;
   w: number; // ancho
   h: number; // alto
-  bg_color?: string; // color de fondo (hex o 'transparent')
-  layer_cast_color?: string; // color de capa opcional
+  // Paleta de colores reutilizables para la plantilla. Las keys válidas son:
+  // `primary`, `secondary`, `accent`, `background`, `foreground`.
+  // Cada key puede ser un color en formato hexadecimal (#RGB, #RRGGBB, #RRGGBBAA),
+  // `rgb(...)` / `rgba(...)`, `hsl(...)` / `hsla(...)` o la cadena `transparent`.
+  // Las `layers` pueden usar una de estas keys (p. ej. color: 'primary') o
+  // proporcionar directamente un color en cualquiera de los formatos anteriores.
+  colors?: {
+    primary?: string;
+    secondary?: string;
+    accent?: string;
+    background?: string;
+    foreground?: string;
+    auto?: string;
+  };
   layers: Array<TextLayer | ShapeLayer>;
 }
+
+Ejemplo de `colors` en la plantilla y uso en una capa:
+
+```javascript
+const template = {
+  version: '1',
+  title: 'Ejemplo',
+  w: 800,
+  h: 600,
+  colors: {
+    background: '#ffffff',
+    primary: '#1e90ff',
+    accent: '#ff6b6b'
+  },
+  layers: [
+    { id: 't1', type: 'text', dx: 100, dy: 100, text: 'Hola', color: 'primary' }
+  ]
+};
+```
 ```
 
 ### Capa de Texto
@@ -98,7 +127,7 @@ interface TextLayer {
   text: string;
   size?: number; // tamaño de fuente (default: 16)
   family?: string; // familia de fuente (default: 'Arial')
-  color?: string; // color (hex o 'auto')
+  color?: string; // color (clave de `colors` como 'primary', color directo como '#fff' o 'auto')
   weight?: number; // peso de fuente (default: 400)
   align?: 'start' | 'end' | 'left' | 'right' | 'center';
   baseline?: 'top' | 'hanging' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom';
@@ -119,7 +148,7 @@ interface ShapeLayer {
   dy: number; // posición y
   dw?: number; // ancho
   dh?: number; // alto
-  color?: string; // color de relleno (hex o 'auto')
+  color?: string; // color de relleno (clave de `colors`, color directo como '#fff' o 'auto')
   image?: string; // URL de imagen o placeholder
   clip?: {
     svg?: string; // SVG para recorte
@@ -179,7 +208,6 @@ La función `brush` recibe un objeto de opciones y devuelve un `HTMLCanvasElemen
 type BrushOptions = {
   template: Template;
   filterText?: Record<string, string | number | undefined>;
-  castColor?: string | undefined;
   fonts?: Array<{ name: string; url: string }>;
 }
 

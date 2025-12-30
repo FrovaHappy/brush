@@ -99,6 +99,7 @@ const colorsBaseSchema = z.object({
   accent: z.optional(colorBaseSchema),
   background: z.optional(colorBaseSchema),
   foreground: z.optional(colorBaseSchema),
+  auto: z.optional(colorBaseSchema)
 })
 
 const colorSchema = z.optional(z.union([z.keyof(colorsBaseSchema), colorBaseSchema]))
