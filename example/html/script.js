@@ -41,7 +41,6 @@ async function init() {
   try {
     const canvas = await brush({
       template,
-      images: {},
       filterText: {},
       castColor: undefined,
       fonts: [

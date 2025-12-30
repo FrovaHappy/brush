@@ -2,23 +2,66 @@
 
 Una librería de canvas universal que funciona tanto en el navegador como en Node.js. Permite renderizar plantillas de dibujo con capas de texto y formas en un contexto de canvas.
 
-> ⚠️ **Aviso Importante**: Este proyecto está lejos de estar terminado y se mantiene únicamente en mis tiempos libres. Puede contener bugs, funcionalidades incompletas y cambios significativos en futuras versiones. Úsalo bajo tu propio riesgo. En próximos updates dejaré el código disponible en GitHub.
-
-## Novedad reciente, Carga de fuentes
-Ahora puedes cargar fuentes personalizadas en ambos entornos (navegador y Node.js) al renderizar tus plantillas. Simplemente proporciona un array de URLs de fuentes al llamar a la función `brush`.
-
-## Repositorio en GitHub
-
 El código fuente ya está disponible en GitHub: https://github.com/FrovaHappy/brush
 
 Puedes abrir issues, crear pull requests o hacer fork para contribuir. Si te gusta el proyecto, considera darle star.
+
+> Importante: la validación de url solo comprueba que sea string y no valida que la url sea segura o accesible.
 
 ## Instalación
 
 ```bash
 npm install @frova_happy/brush
+
+# o usando unpkg
+import { brush } from 'https://unpkg.com/@frova_happy/brush@0.1.1/dist/web/index.js';
 ```
 
+### En el Navegador
+
+```javascript
+import { brush } from '@frova_happy/brush/web'; // importa la versión web
+
+const template = { /* ... */ };
+
+
+const canvas = await brush({
+  template,                 // plantilla (obligatorio)
+  filterText: {},           // valores para plantillas (opcional)
+  castColor: undefined,     // color de capa (opcional)
+  fonts: [                  // array de fuentes para preload (opcional)
+    { name: 'Science-Gothic', url: '/example/html/ScienceGothic.ttf' }
+  ]
+});
+
+document.body.appendChild(canvas); // agrega el canvas al DOM úsalo como necesites
+```
+
+### En Node.js
+
+```javascript
+import { brush } from '@frova_happy/brush'; // importa la versión de Node.js este utiliza '@napi-rs/canvas' internamente para renderizar
+import { writeFileSync } from 'fs';
+
+const template = { /* ... */ };
+
+try {
+  const canvas = await brush({
+    template,
+    filterText: {},
+    castColor: undefined,
+    fonts: [
+      { name: 'Science-Gothic', url: 'https://.../Science-Gothic.woff2' }
+    ]
+  });
+} catch (error) {
+  // el error puede ser de validación o de renderizado
+  console.error('Error al renderizar el canvas:', error);
+  process.exit(1);
+}
+
+writeFileSync('output.png', canvas.toBuffer('image/png'));
+```
 ## Tipos TypeScript
 
 La librería incluye definiciones de tipos completas para TypeScript. Puedes importar los tipos de las siguientes maneras:
@@ -26,105 +69,6 @@ La librería incluye definiciones de tipos completas para TypeScript. Puedes imp
 ```typescript
 // Importar tipos desde el paquete principal
 import type { Templete, Text, Shape, Filter } from '@frova_happy/brush';
-
-// Importar tipos desde entry points específicos
-import type { Templete } from '@frova_happy/brush/web';
-import type { Templete } from '@frova_happy/brush/node';
-
-// También puedes importar la función de validación con tipos
-import { validateCanvas } from '@frova_happy/brush';
-import type { Templete } from '@frova_happy/brush';
-```
-
-## Uso Básico
-
-### En el Navegador
-
-```javascript
-import { brush } from '@frova_happy/brush/web';
-
-// Definir una plantilla
-const template = {
-  version: '1',
-  title: 'Mi Dibujo',
-  w: 800,
-  h: 600,
-  bg_color: '#ffffff',
-  layers: [
-    {
-      id: 'texto1',
-      type: 'text',
-      dx: 100,
-      dy: 100,
-      text: 'Hola Mundo',
-      size: 24,
-      color: '#000000'
-    },
-    {
-      id: 'forma1',
-      type: 'shape',
-      dx: 200,
-      dy: 200,
-      dw: 100,
-      dh: 100,
-      color: '#ff0000'
-    }
-  ]
-};
-
-// Renderizar en canvas
-const canvas = await brush(
-  template,
-  {}, // imágenes (opcional)
-  {}, // filtros de texto (opcional)
-  undefined // color de capa (opcional)
-);
-
-// Agregar al DOM
-document.body.appendChild(canvas);
-```
-
-### En Node.js
-
-```javascript
-import { brush, getImages } from '@frova_happy/brush/node';
-
-// Definir una plantilla
-const template = {
-  version: '1',
-  title: 'Mi Dibujo',
-  w: 800,
-  h: 600,
-  bg_color: '#ffffff',
-  layers: [
-    {
-      id: 'texto1',
-      type: 'text',
-      dx: 100,
-      dy: 100,
-      text: 'Hola Mundo',
-      size: 24,
-      color: '#000000'
-    }
-  ]
-};
-
-// Cargar imágenes si es necesario
-const images = {};
-// const images = { 'imagen1': await getImages('https://example.com/image.png') };
-
-// Renderizar en canvas
-const canvas = await brush(
-  template,
-  images,
-  {},
-  undefined
-);
-
-// Guardar como imagen
-const fs = require('fs');
-const buffer = canvas.toBuffer('image/png');
-fs.writeFileSync('output.png', buffer);
 ```
 
 ## Estructura de la Plantilla
@@ -211,7 +155,7 @@ interface Filter {
 
 ## Validación
 
-La librería incluye validación automática de plantillas usando Zod:
+La librería incluye validación automática de plantillas usando Zod, el lo utiliza internamente antes de renderizar esto puede probocar error si la plantilla no es válida. También puedes usar la función `validateCanvas` para validar plantillas manualmente:
 
 ```javascript
 import { validateCanvas } from '@frova_happy/brush';
@@ -224,28 +168,22 @@ if (!result.ok) {
 }
 ```
 
-## API
 
-### brush (Web)
 
-```typescript
-async function brush(
-  template: Template,
-  images: Record<string, HTMLImageElement | undefined>,
-  filterText: Record<string, string | number | undefined>,
-  castColor?: string
-): Promise<HTMLCanvasElement>
-```
+### `brush` (Web / Node)
 
-### brush (Node)
+La función `brush` recibe un objeto de opciones y devuelve un `HTMLCanvasElement` en el navegador o un `Canvas` en Node.js.
 
 ```typescript
-async function brush(
-  template: Template,
-  images: Record<string, Image>,
-  filterText: Record<string, string | number | undefined>,
-  castColor?: string
-): Promise<Canvas>
+# BrushOptions
+type BrushOptions = {
+  template: Template;
+  filterText?: Record<string, string | number | undefined>;
+  castColor?: string | undefined;
+  fonts?: Array<{ name: string; url: string }>;
+}
+
+async function brush(options: BrushOptions): Promise<HTMLCanvasElement | Canvas> | throws Error;
 ```
 
 ## Dependencias
@@ -253,10 +191,7 @@ async function brush(
 La librería incluye todas las dependencias necesarias automáticamente. No se requieren instalaciones adicionales.
 
 ## Limitaciones
-
-- Ancho y alto máximo del canvas: 2000px
-- Máximo 50 capas por plantilla
-- Imágenes soportadas: PNG, JPG, JPEG, WebP, GIF, SVG
+- Imágenes soportadas: PNG, JPG, JPEG (no se testeo con otros formatos)
 - Colores en formato hexadecimal (#RGB, #RRGGBB, #RRGGBBAA)
 
 ## Contribuir
@@ -264,8 +199,12 @@ La librería incluye todas las dependencias necesarias automáticamente. No se r
 1. Clona el repositorio
 2. Instala dependencias: `npm install`
 3. Ejecuta tests: `npm test`
-4. Construye: `npm run build`
+4. Construye:
+    - `npm run build` para construir la librería
+    - `npm run dev:html` para correr el ejemplo HTML
+    - `npm run dev:react` para correr el ejemplo React
+    - `npm run dev:node` para correr el ejemplo Node.js
 
 ## Licencia
 
-Ver archivo LICENSE para detalles.
+Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
