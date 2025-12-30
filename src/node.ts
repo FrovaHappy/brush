@@ -34,12 +34,11 @@ export async function setFont(fonts: Font[], template: Templete): Promise<void> 
 interface BrushProps {
   template: Templete,
   filterText: Record<string, string | number | undefined>,
-  castColor: string | undefined,
   fonts?: Font[]
 }
 
 export async function brush(props: BrushProps): Promise<Canvas> {
-  const { template, filterText, castColor, fonts = [] } = props;
+  const { template, filterText, fonts = [] } = props;
 
   const images: Record<string, Image> = {};
   for (const layer of template.layers) {
