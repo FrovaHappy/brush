@@ -1,43 +1,33 @@
-import type { Colors, Text } from './validate'
+import type { FilterText, TextLayer } from '../types'
 import { buildFilter } from './buildFilter'
-import { getColor, replaceAllValues } from '../platforms/utils'
 
 interface PaintTextProps {
   ctx: CanvasRenderingContext2D
-  layer: Text
-  filterText: Record<string, string | number | undefined>
-  colors: Colors
+  layer: TextLayer
+  filterText: FilterText
 }
 
 export default function brushText(options: PaintTextProps) {
-  const { ctx, layer, filterText, colors } = options
-  const color = getColor(layer.color, colors)
-  let text = replaceAllValues(layer.text, filterText)
+  const { ctx, layer, filterText } = options
   // Prepare font settings before measuring text
-  const fam = layer.family ?? 'sans-serif'
+  const fam = layer.fontFamily ?? 'sans-serif'
   const family = fam.includes(' ') ? `"${fam}"` : fam
-  const weight = layer.weight ?? 400
-  const size = layer.size ?? 16
-  ctx.save() // save the current state of the canvas
-  ctx.font = `${weight} ${size}px ${family}`
-  let widthText = ctx.measureText(text).width
-
-  if (layer.maxWidth !== 0 && layer.maxWidth) {
-    while (widthText > layer.maxWidth || widthText < 0) {
-      text = text.slice(0, -1)
-      widthText = ctx.measureText(text).width
-    }
+  let color = layer.color
+  if (color === 'auto') {
+    color = filterText.ColorVibrant as string || '#000'
   }
+  ctx.save() // save the current state of the canvas
+  ctx.font = `${layer.fontWeight ?? 'normal'} ${layer.fontSize}px ${family}`
+
   // Global Settings
-  ctx.globalAlpha = layer.globalAlpha ?? 1
-  ctx.textAlign = layer.align ?? 'start'
-  ctx.textBaseline = layer.baseline ?? 'alphabetic'
-  ctx.fillStyle = color ?? '#000'
+  ctx.textAlign = layer.textAlign ?? 'start'
+  ctx.textBaseline = layer.textBaseline ?? 'alphabetic'
+  ctx.fillStyle = color
 
   const filter = buildFilter(layer.filter)
   if (filter) ctx.filter = filter
 
-  ctx.fillText(text, layer.dx, layer.dy)
+  ctx.fillText(layer.text, layer.x, layer.y)
 
   ctx.restore() // restore the previous state of the canvas
   return ctx

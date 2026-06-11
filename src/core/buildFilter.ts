@@ -1,25 +1,21 @@
-import type { Filter } from './validate'
+import type { Filter } from '../types'
 
 export function buildFilter(filter: Filter | undefined) {
   if (!filter) return undefined
   const {
-    dropShadow,
+    'drop-shadow': dropShadow,
     blur,
     brightness,
     contrast,
     grayscale,
-    hueRotate,
+    'hue-rotate': hueRotate,
     invert,
     opacity,
     saturate,
     sepia,
   } = filter
   const filterString = []
-  if (dropShadow) {
-    filterString.push(
-      `drop-shadow(${dropShadow.offsetX}px ${dropShadow.offsetY}px ${dropShadow.blurRadius}px ${dropShadow.color})`
-    )
-  }
+  if (dropShadow) { filterString.push(`drop-shadow(${dropShadow})`) }
   if (blur) filterString.push(`blur(${blur}px)`)
   if (brightness) filterString.push(`brightness(${brightness}%)`)
   if (contrast) filterString.push(`contrast(${contrast}%)`)

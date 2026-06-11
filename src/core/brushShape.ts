@@ -1,34 +1,30 @@
-import type { Colors, Shape } from './validate'
-import { buildFilter } from './buildFilter'
+import type { FilterText, ShapeLayer } from '../types'
 import compileSVG from './compileSVG'
-import { getColor } from '../platforms/utils'
 
-interface PaintShapeProps {
-  ctx: CanvasRenderingContext2D
-  layer: Shape
-  image: HTMLImageElement | undefined
-  colors: Colors
-  Path2D: typeof Path2D
+interface PaintShapeProps<G, I> {
+  ctx: G extends CanvasRenderingContext2D ? G : any
+  layer: ShapeLayer
+  image: I extends HTMLImageElement ? I : any
+  filterText: FilterText
 }
 
-export default function brushShape(props: PaintShapeProps) {
-  const { ctx, layer, Path2D, image, colors } = props
-  const color = getColor(layer.color, colors)
-  const clip = layer.clip
-  const filter = buildFilter(layer.filter)
+export default function brushShape<G, I>(props: PaintShapeProps<G, I>) {
+  const { ctx, layer, image, filterText } = props
+  let color = layer.color
+  if (color === 'auto') {
+    color = filterText.ColorVibrant || '#000'
+  }
   ctx.save()
 
   // obtain dimensions and scale of the image
   const dimension = {
-    h: layer.dh ?? image?.height ?? 100,
-    w: layer.dw ?? image?.width ?? 100,
+    h: layer.h ?? image?.height ?? 100,
+    w: layer.w ?? image?.width ?? 100,
   }
+  ctx.translate(layer.x, layer.y)
 
-  if (filter) ctx.filter = filter
-  ctx.translate(layer.dx, layer.dy)
-
-  if (clip) {
-    const patch = { ...compileSVG(clip.svg || '<svg></svg>'), align: clip.align }
+  if (layer.svg) {
+    const patch = { ...compileSVG(layer.svg || '<svg></svg>'), align: layer.align }
     ctx.save()
     // Scale the clip path according to the shape dimensions
     const scaleX = dimension.w / patch.w

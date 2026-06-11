@@ -1,25 +1,19 @@
-import { type Templete, isShape, isText, validateCanvas } from './validate'
-import brushShape from './brushShape'
+import type { FilterText, Templete } from '../types'
 import brushText from './brushText'
+import brushShape from './brushShape'
 
-interface PaintCanvasProps<Context = CanvasRenderingContext2D> {
-  ctx: Context
+interface BrushCanvasProps<C, G> {
+  ctx: C extends CanvasRenderingContext2D ? C : any
   template: Templete
-  Path2D: typeof Path2D
-  images: Record<string, HTMLImageElement | undefined>
-  filterText: Record<string, string | number | undefined>
+  filterText: FilterText
+  images: Record<string, G extends HTMLImageElement ? G : any>
 }
 /**
- * Props.images is a Record<[id: sting], HTMLImageElement | undefined>
+ * Props.images is a Record<[id: string], HTMLImageElement | undefined>
  */
-export default function brush<Context extends CanvasRenderingContext2D>(props: PaintCanvasProps<Context>) {
-  const { ctx, template, Path2D, filterText, images } = props
+export default function brushCanvas<C, I>(props: BrushCanvasProps<C, I>) {
+  const { ctx, template, filterText, images } = props
   const { layers, ...base } = template
-  // validate template 
-  const validation = validateCanvas(template)
-  if (!validation.ok) {
-    throw new Error(`Invalid template: ${JSON.stringify(validation.errors)}`)
-  }
 
   ctx.clearRect(0, 0, base.w, base.h) // reset canvas in the Frontend
   ctx.save()
@@ -30,8 +24,8 @@ export default function brush<Context extends CanvasRenderingContext2D>(props: P
   }
   ctx.restore() // restore the previous state of the canvas
   for (const layer of layers) {
-    if (isShape(layer)) brushShape({ ctx, layer, Path2D, image: images[layer.id], colors: template.colors })
-    if (isText(layer)) brushText({ ctx, layer, filterText, colors: template.colors })
+    if (layer.type === 'shape') brushShape({ ctx, layer, image: images[layer.id], filterText })
+    if (layer.type === 'text') brushText({ ctx, layer, filterText })
   }
   return ctx
 }
