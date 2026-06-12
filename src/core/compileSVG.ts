@@ -49,7 +49,7 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   let h = 100; // default
 
   // Extract SVG dimensions
-  const svgTags = svg.match(/<svg[^>]*>/g) || [];
+  const svgTags = svg.match(/<[\s]?svg[^>]*>/g) || [];
   if (svgTags.length > 0) {
     const svgTag = svgTags[0]!;
     const widthAttr = getAttribute(svgTag, 'width');
@@ -66,7 +66,7 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   }
 
   // Handle <path> elements
-  const pathTags = svg.match(/<path[^>]*>/g) || [];
+  const pathTags = svg.match(/<[\s]?path[^>]*>/g) || [];
   for (const tag of pathTags) {
     if (shouldIncludeElement(tag)) {
       const pathD = getAttribute(tag, 'd');
@@ -77,7 +77,7 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   }
 
   // Handle <circle> elements
-  const circleTags = svg.match(/<circle[^>]*>/g) || [];
+  const circleTags = svg.match(/<[\s]?circle[^>]*>/g) || [];
   for (const tag of circleTags) {
     if (shouldIncludeElement(tag)) {
       const cx = parseFloat(getAttribute(tag, 'cx') || '0');
@@ -91,7 +91,7 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   }
 
   // Handle <rect> elements
-  const rectTags = svg.match(/<rect[^>]*>/g) || [];
+  const rectTags = svg.match(/<[\s]?rect[^>]*>/g) || [];
   for (const tag of rectTags) {
     if (shouldIncludeElement(tag)) {
       const x = parseFloat(getAttribute(tag, 'x') || '0');
@@ -105,7 +105,7 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   }
 
   // Handle <ellipse> elements
-  const ellipseTags = svg.match(/<ellipse[^>]*>/g) || [];
+  const ellipseTags = svg.match(/<[\s]?ellipse[^>]*>/g) || [];
   for (const tag of ellipseTags) {
     if (shouldIncludeElement(tag)) {
       const cx = parseFloat(getAttribute(tag, 'cx') || '0');
@@ -120,7 +120,7 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   }
 
   // Handle <line> elements
-  const lineTags = svg.match(/<line[^>]*>/g) || [];
+  const lineTags = svg.match(/<[\s]?line[^>]*>/g) || [];
   for (const tag of lineTags) {
     if (shouldIncludeElement(tag)) {
       const x1 = parseFloat(getAttribute(tag, 'x1') || '0');
@@ -132,7 +132,7 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   }
 
   // Handle <polygon> elements
-  const polygonTags = svg.match(/<polygon[^>]*>/g) || [];
+  const polygonTags = svg.match(/<[\s]?polygon[^>]*>/g) || [];
   for (const tag of polygonTags) {
     if (shouldIncludeElement(tag)) {
       const points = getAttribute(tag, 'points');
@@ -150,7 +150,7 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
   }
 
   // Handle <polyline> elements
-  const polylineTags = svg.match(/<polyline[^>]*>/g) || [];
+  const polylineTags = svg.match(/<[\s]?polyline[^>]*>/g) || [];
   for (const tag of polylineTags) {
     if (shouldIncludeElement(tag)) {
       const points = getAttribute(tag, 'points');
