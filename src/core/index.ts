@@ -4,6 +4,7 @@ import brushShape from './brushShape'
 
 interface BrushCanvasProps<C extends CanvasRenderingContext2D, G extends HTMLImageElement | undefined> {
   ctx: C
+  supportCtx: C
   template: Templete
   filterText: FilterText
   images: Record<string, G>
@@ -12,7 +13,7 @@ interface BrushCanvasProps<C extends CanvasRenderingContext2D, G extends HTMLIma
  * Props.images is a Record<[id: string], HTMLImageElement | undefined>
  */
 export default function brushCanvas<C extends CanvasRenderingContext2D, I extends HTMLImageElement | undefined>(props: BrushCanvasProps<C, I>) {
-  const { ctx, template, filterText, images } = props
+  const { ctx, supportCtx, template, filterText, images } = props
   const { layers, ...base } = template
 
   ctx.clearRect(0, 0, base.w, base.h) // reset canvas in the Frontend
@@ -24,7 +25,12 @@ export default function brushCanvas<C extends CanvasRenderingContext2D, I extend
   }
   ctx.restore() // restore the previous state of the canvas
   for (const layer of layers) {
-    if (layer.type === 'shape') brushShape({ ctx, layer, image: images[layer.id], filterText })
+    ctx.save()
+    supportCtx.save()
+    if (layer.type === 'shape') {
+      supportCtx.clearRect(0, 0, base.w, base.h)
+      brushShape({ ctx, layer, image: images[layer.id], filterText, supportCtx })
+    }
     if (layer.type === 'text') brushText({ ctx, layer, filterText })
   }
   return ctx

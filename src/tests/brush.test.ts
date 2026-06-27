@@ -28,7 +28,8 @@ const template: Templete = {
       align: 'bottom left',
       color: 'auto',
       filter: {
-        opacity: '1',
+        opacity: '0.7',
+        "drop-shadow": '0px 0px 20px {{ColorVibrant}}'
       }
     },
     {
@@ -42,8 +43,8 @@ const template: Templete = {
       w: 100,
       h: 100,
       filter: {
-        "hue-rotate": '90deg',
-        "opacity": '1'
+        "opacity": '1',
+        "drop-shadow": '30px 10px 4px {{ColorVibrant}}'
       }
     },
     {
@@ -68,6 +69,7 @@ describe('paint brush', () => {
     }
     const canvas = await brush({ template, filterText })
     const png = await canvas.encode('png')
+    if (png.length === 0) throw new Error('Expected generated image to be non-empty')
     await writeFile('test.png', png)
   })
 })

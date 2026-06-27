@@ -80,10 +80,15 @@ export async function brush(props: BrushProps): Promise<Canvas> {
   const filterText = await includePalettes(imageBuffer, props.filterText);
   template = sanitizeTemplate(props.template, filterText);
   const images = await getImages(template);
+
   const canvas = new Canvas(template.w, template.h);
   const ctx = canvas.getContext('2d');
+  const supportCanvas = new Canvas(template.w, template.h)
+  const supportCtx = supportCanvas.getContext('2d')
+
   brushCore({
     ctx: ctx as unknown as CanvasRenderingContext2D,
+    supportCtx: supportCtx as unknown as CanvasRenderingContext2D,
     template,
     images: images as unknown as Record<string, HTMLImageElement | undefined>,
     filterText,
