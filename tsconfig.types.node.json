@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.node.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": false,
+    "isolatedModules": false,
+    "module": "esnext",
+    "emitDeclarationOnly": true,
+    "outDir": "./dist/types"
+  },
+  "include": [
+    "src/node.ts",
+    "src/types.d.ts",
+    "src/core/**/*",
+    "src/platforms/**/*"
+  ]
+}

@@ -17,6 +17,8 @@ const FONTS_FROM_CDN: Font[] = [
     name: 'Playwrite England Joined',
     url: 'https://fonts.gstatic.com/l/font?kit=k3kLo8wSPe9dzQ1UGbvobAPhY7KP0QrM4ozNenTi2OoAAJ29kwI6hE4&skey=5be5ec70f90e1d67&v=v11',
   }]
+
+
 const FONTS_FROM_LOCAL: Font[] = [
   {
     name: 'Roboto',
@@ -33,6 +35,10 @@ const FONTS_FROM_LOCAL: Font[] = [
   {
     name: 'Playwrite England Joined',
     url: './tests/fonts/PlaywriteEnglandJoined.woff2',
+  },
+  {
+    name: 'Bitcount Grid Double Regular',
+    url: './tests/fonts/BitcountGridDouble.ttf'
   }
 ]
 

@@ -1,4 +1,5 @@
-import type { FilterText, VibrantType } from "../types";
+import type { FilterText } from "../types";
+import { getSwatches } from 'colorthief'
 
 /**
  * Sanitizes a template by replacing variables with provided values.
@@ -48,14 +49,14 @@ export function sanitizeTemplate<T>(template: T, values: Record<string, string |
 /**
  * Includes palette colors extracted from the image into the filterText for template variable replacement. The palette colors are added with keys in the format of ColorVibrant, ColorLightVibrant, ColorDarkVibrant, ColorMuted, ColorLightMuted, and ColorDarkMuted. If the image is not provided or if there is an error during palette extraction, the original filterText will be returned without modification.
  */
-export async function includePalettes<T>(image: string | undefined, filterText: FilterText, Vibrant: T extends VibrantType ? T : any): Promise<FilterText> {
+export async function includePalettes(image: HTMLImageElement | Buffer | null, filterText: FilterText): Promise<FilterText> {
   try {
     if (!image) return filterText;
-    const palette = await Vibrant.from(image).getPalette();
+    const palette = await getSwatches(image)
     const result: Record<string, string> = {};
     for (const [key, swatch] of Object.entries(palette)) {
       if (swatch) {
-        result[`Color${key.toLowerCase()}`] = swatch.hex;
+        result[`Color${key}`] = swatch.color.hex();
       }
     }
     return { ...filterText, ...result };

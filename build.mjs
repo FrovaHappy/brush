@@ -4,21 +4,21 @@ import { stat } from 'fs/promises';
 const builds = [
   // ESM builds
   {
-    entryPoints: ['src/web.ts'],
+    entryPoints: ['src/browser.ts'],
     bundle: true,
     platform: 'browser',
     format: 'esm',
     minify: true,
-    outfile: 'dist/web/index.js',
+    outfile: 'dist/browser/index.js',
     external: ['@napi-rs/canvas'],
   },
   {
     entryPoints: ['src/node.ts'],
     bundle: true,
-    platform: 'neutral',
+    platform: 'node',
     format: 'esm',
     outfile: 'dist/node/index.js',
-    external: ['@napi-rs/canvas', 'zod'],
+    external: ['@napi-rs/canvas', 'node-vibrant'],
   },
 ];
 

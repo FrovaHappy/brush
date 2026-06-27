@@ -43,10 +43,13 @@ function shouldIncludeElement(tag: string): boolean {
   return true;
 }
 
-export default function compileSVG(svg: string): { d: string; w: number; h: number } {
+export default function compileSVG(svg: string | undefined, resize?: number) {
+  if (!svg) return undefined
   let d = '';
   let w = 100; // default
   let h = 100; // default
+
+
 
   // Extract SVG dimensions
   const svgTags = svg.match(/<[\s]?svg[^>]*>/g) || [];
@@ -165,6 +168,21 @@ export default function compileSVG(svg: string): { d: string; w: number; h: numb
         }
       }
     }
+  }
+
+  // Apply resize scaling if provided
+  if (resize) {
+    const maxDimension = Math.max(w, h);
+    const scaleFactor = resize / maxDimension;
+
+    // Scale all numbers in the path data
+    d = d.replace(/[-+]?\d+\.?\d*|\.\d+/g, (match) => {
+      return String(parseFloat(match) * scaleFactor);
+    });
+
+    // Update dimensions
+    w = w * scaleFactor;
+    h = h * scaleFactor;
   }
 
   return { d: d.trim(), w, h };

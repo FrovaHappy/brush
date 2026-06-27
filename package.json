@@ -4,13 +4,9 @@
   "description": "Una librería de canvas universal que funciona tanto en el navegador como en Node.js",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/types/node.d.ts",
-      "import": "./dist/node/index.js"
-    },
-    "./web": {
-      "types": "./dist/types/web.d.ts",
-      "import": "./dist/web/index.js"
+    "./browser": {
+      "types": "./dist/types/browser.d.ts",
+      "import": "./dist/browser/index.js"
     },
     "./node": {
       "types": "./dist/types/node.d.ts",
@@ -23,13 +19,10 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "npm run clean && npm run build:js && npm run build:types",
     "build:js": "node build.mjs",
-    "build:types": "tsc -p tsconfig.types.json",
+    "build:types": "tsc -p tsconfig.types.node.json && tsc -p tsconfig.types.browser.json",
+    "build": "npm run clean && npm run build:js && npm run build:types",
     "clean": "rimraf dist",
-    "dev:html": "npm run build && npx http-server@14.1.1 . -p 3000 -o /example/html/index.html",
-    "dev:react": "npm run build && cd example/react && npm install && npm run dev",
-    "dev:node": "npm run build && cd example/node && npm install && npm run start",
     "lint": "biome lint",
     "test": "vitest",
     "prepublishOnly": "npm run build"
@@ -47,19 +40,20 @@
   "license": "MIT",
   "dependencies": {
     "@napi-rs/canvas": "0.1.88",
+    "colorthief": "3.3.1",
     "node-vibrant": "4.0.4",
-    "vitest": "4.0.16",
-    "zod": "4.2.1"
+    "sharp": "0.35.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.10",
     "@types/node": "25.9.3",
     "esbuild": "0.27.2",
     "rimraf": "6.1.2",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "4.0.16"
   },
   "peerDependenciesMeta": {},
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   }
 }

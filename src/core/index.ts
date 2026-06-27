@@ -2,16 +2,16 @@ import type { FilterText, Templete } from '../types'
 import brushText from './brushText'
 import brushShape from './brushShape'
 
-interface BrushCanvasProps<C, G> {
-  ctx: C extends CanvasRenderingContext2D ? C : any
+interface BrushCanvasProps<C extends CanvasRenderingContext2D, G extends HTMLImageElement | undefined> {
+  ctx: C
   template: Templete
   filterText: FilterText
-  images: Record<string, G extends HTMLImageElement ? G : any>
+  images: Record<string, G>
 }
 /**
  * Props.images is a Record<[id: string], HTMLImageElement | undefined>
  */
-export default function brushCanvas<C, I>(props: BrushCanvasProps<C, I>) {
+export default function brushCanvas<C extends CanvasRenderingContext2D, I extends HTMLImageElement | undefined>(props: BrushCanvasProps<C, I>) {
   const { ctx, template, filterText, images } = props
   const { layers, ...base } = template
 

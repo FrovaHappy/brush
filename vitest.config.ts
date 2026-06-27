@@ -6,5 +6,6 @@ export default defineConfig({
     include: ['src/**/*.test.ts', 'src/**/*.spec.ts', 'src/**/*.test.tsx'],
     globals: false,
     passWithNoTests: false,
+    testTimeout: 10000, // increase timeout for tests that involve image loading and processing
   },
 })
