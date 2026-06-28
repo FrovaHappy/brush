@@ -1,11 +1,10 @@
 name: Publish to npm
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   publish:
@@ -18,42 +17,52 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Verify commit is on `main` and tagged `v*`
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Verify commit on `main`, valid tag, and unpublished version
         id: verify
         shell: bash
         run: |
           set -uo pipefail
           git fetch --prune --tags origin main
-          # resolve commit SHA (handles annotated tags)
-          if commit_sha=$(git rev-parse --verify "${GITHUB_REF}^{}" 2>/dev/null); then
-            :
-          else
-            commit_sha="${GITHUB_SHA}"
+
+          commit_sha="${GITHUB_SHA}"
+          if commit_sha_resolved=$(git rev-parse --verify "${GITHUB_REF}^{}" 2>/dev/null); then
+            commit_sha="$commit_sha_resolved"
           fi
           echo "Commit to verify: $commit_sha"
-          # check tag pointing at commit
+
+          # 1. Check tag matching v* pointing at commit
           tag=$(git tag --points-at "$commit_sha" --list 'v*' | head -n1 || true)
           if [ -z "$tag" ]; then
-            echo "No tag matching v* points at commit $commit_sha"
-            echo "should_publish=false" >> "$GITHUB_OUTPUT"
-            exit 0
+            echo "Error: No tag matching v* points at commit $commit_sha"
+            exit 1
           fi
           echo "Found tag: $tag"
-          # check commit is contained in origin/main
-          if git merge-base --is-ancestor "$commit_sha" origin/main; then
-            echo "Commit $commit_sha is in origin/main"
-            echo "should_publish=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "Commit $commit_sha is not in origin/main"
-            echo "should_publish=false" >> "$GITHUB_OUTPUT"
-          fi
 
-      - name: Setup Node.js
-        if: ${{ steps.verify.outputs.should_publish == 'true' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          registry-url: 'https://registry.npmjs.org'
+          # 2. Check commit is contained in origin/main
+          if ! git merge-base --is-ancestor "$commit_sha" origin/main; then
+            echo "Error: Commit $commit_sha is not in origin/main"
+            exit 1
+          fi
+          echo "Commit $commit_sha is in origin/main"
+
+          # 3. Check if version is already published on npm
+          pkg_name=$(node -p "require('./package.json').name")
+          pkg_version=$(node -p "require('./package.json').version")
+          echo "Checking npm registry for $pkg_name@$pkg_version..."
+
+          if npm view "$pkg_name@$pkg_version" version >/dev/null 2>&1; then
+            echo "Error: Version $pkg_version of $pkg_name is already published on npm!"
+            exit 1
+          fi
+          echo "Version $pkg_version is not published yet."
+
+          echo "should_publish=true" >> "$GITHUB_OUTPUT"
 
       - name: Install dependencies
         if: ${{ steps.verify.outputs.should_publish == 'true' }}
