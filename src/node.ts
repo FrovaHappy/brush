@@ -32,24 +32,26 @@ export async function setFonts(fonts: Font[]) {
   for (const font of fonts) {
     const { url, name } = font;
     if (GlobalFonts.has(name)) continue;
-    // check if the path is valid
-    // if (!/^https?:\/\//.test(url) && !/^\/|^[a-zA-Z]:\\/.test(url)) {
-    //   console.warn(`Invalid font URL: ${url}`);
-    //   continue;
-    // }
-    const rutaAbsoluta = path.resolve(process.cwd(), 'src', url);
-    // Lee el archivo como Buffer (nativo de Node)
-    const nodeBuffer = await readFile(rutaAbsoluta);
+    let archive: ArrayBuffer
+    try {
+      if (isValidUrl(url)) {
+        archive = await (await fetch(url)).arrayBuffer()
+      } else {
+        const rutaAbsoluta = path.resolve(process.cwd(), url);
+        // Lee el archivo como Buffer (nativo de Node)
+        const nodeBuffer = await readFile(rutaAbsoluta);
 
-    // Convierte a ArrayBuffer
-    const arrayBuffer = nodeBuffer.buffer.slice(
-      nodeBuffer.byteOffset,
-      nodeBuffer.byteOffset + nodeBuffer.byteLength
-    );
+        // Convierte a ArrayBuffer
+        archive = nodeBuffer.buffer.slice(
+          nodeBuffer.byteOffset,
+          nodeBuffer.byteOffset + nodeBuffer.byteLength
+        );
 
-
-    GlobalFonts.register(Buffer.from(arrayBuffer), name);
-    console.log(GlobalFonts.has(name), name)
+      }
+      GlobalFonts.register(Buffer.from(archive), name);
+    } catch {
+      console.log(`error load ${url}`)
+    }
   }
 }
 
