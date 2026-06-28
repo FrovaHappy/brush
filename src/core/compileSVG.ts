@@ -170,20 +170,46 @@ export default function compileSVG(svg: string | undefined, resize?: number) {
     }
   }
 
-  // Apply resize scaling if provided
-  if (resize) {
-    const maxDimension = Math.max(w, h);
-    const scaleFactor = resize / maxDimension;
+  function scalePathData(path: string, scale: number) {
+    const numberRegex = /[-+]?(?:\d*\.\d+|\d+)(?:e[-+]?\d+)?/gi
 
-    // Scale all numbers in the path data
-    d = d.replace(/[-+]?\d+\.?\d*|\.\d+/g, (match) => {
-      return String(parseFloat(match) * scaleFactor);
-    });
+    return path.replace(/([A-Za-z])([^A-Za-z]*)/g, (_segment, command, args: string) => {
+      let argIndex = 0
+      const scaledArgs = args.replace(numberRegex, (value: string) => {
+        const num = parseFloat(value)
+        let scaled = num
 
-    // Update dimensions
-    w = w * scaleFactor;
-    h = h * scaleFactor;
+        const upper = command.toUpperCase()
+        if (upper === 'A') {
+          const arcPos = argIndex % 7
+          if (arcPos !== 2 && arcPos !== 3 && arcPos !== 4) {
+            scaled = num * scale
+          }
+        } else {
+          scaled = num * scale
+        }
+
+        argIndex += 1
+        return Number.isFinite(scaled) && Number.isInteger(scaled)
+          ? String(scaled)
+          : String(+scaled.toFixed(6))
+      })
+
+      return `${command}${scaledArgs}`
+    })
   }
 
-  return { d: d.trim(), w, h };
+  // Apply resize scaling if provided
+  if (resize) {
+    const maxDimension = Math.max(w, h)
+    const scaleFactor = resize / maxDimension
+
+    d = scalePathData(d, scaleFactor)
+
+    // Update dimensions
+    w = w * scaleFactor
+    h = h * scaleFactor
+  }
+
+  return { d: d.trim(), w, h }
 }
