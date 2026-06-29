@@ -24,6 +24,8 @@ const template: Templete = {
       w: 200,
       h: 200,
       scale: 1.5,
+      rotation: 45,
+      objectFit: 'fill',
       align: 'bottom left',
       color: 'auto',
       filter: {
@@ -51,6 +53,8 @@ const template: Templete = {
       color: 'auto', // tomo el color de la imagen este puede ser el avatar
       'fontFamily': 'Updock', //no funciona
       'fontSize': 32,
+      maxWidth: 50,
+      rotation: -90,
       x: 400,
       y: 100,
       id: 'text1',

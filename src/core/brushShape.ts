@@ -21,22 +21,48 @@ export default function brushShape<G extends CanvasRenderingContext2D, I extends
     h: image?.height ?? layer.h,
     w: image?.width ?? layer.w,
   }
-  const sideMayor = Math.max(layer.w, layer.h)
-  const sideMinor = Math.min(layer.w, layer.h)
-  let reasonProportion = 0
 
-  if (layer.w > layer.h) {
-    reasonProportion = sideMayor / dimension.w
+  let newWidth = layer.w
+  let newHeigh = layer.h
+
+  if (layer.objectFit === 'cover') {
+    const scaleFactor = Math.max(layer.w / dimension.w, layer.h / dimension.h) * (layer.scale ?? 1)
+    newWidth = dimension.w * scaleFactor
+    newHeigh = dimension.h * scaleFactor
+  } else if (layer.objectFit === 'contain') {
+    const scaleFactor = Math.min(layer.w / dimension.w, layer.h / dimension.h) * (layer.scale ?? 1)
+    newWidth = dimension.w * scaleFactor
+    newHeigh = dimension.h * scaleFactor
+  } else if (layer.objectFit === 'fill') {
+    newWidth = layer.w * (layer.scale ?? 1)
+    newHeigh = layer.h * (layer.scale ?? 1)
   } else {
-    reasonProportion = sideMayor / dimension.h
+    const sideMayor = Math.max(layer.w, layer.h)
+    let reasonProportion = 0
+    if (layer.w > layer.h) {
+      reasonProportion = sideMayor / dimension.w
+    } else {
+      reasonProportion = sideMayor / dimension.h
+    }
+    newWidth = (dimension.w * reasonProportion) * (layer.scale ?? 1)
+    newHeigh = (dimension.h * reasonProportion) * (layer.scale ?? 1)
   }
-  const newWidth = (dimension.w * reasonProportion) * (layer.scale ?? 1)
-  const newHeigh = (dimension.h * reasonProportion) * (layer.scale ?? 1)
 
+  const sideMinor = Math.min(layer.w, layer.h)
 
   supportCtx.save()
 
-  supportCtx.translate(layer.x, layer.y)
+  const centerX = layer.x + layer.w / 2
+  const centerY = layer.y + layer.h / 2
+
+  if (layer.rotation) {
+    supportCtx.translate(centerX, centerY)
+    supportCtx.rotate((layer.rotation * Math.PI) / 180)
+    supportCtx.translate(-layer.w / 2, -layer.h / 2)
+  } else {
+    supportCtx.translate(layer.x, layer.y)
+  }
+
   supportCtx.fillStyle = color ?? 'transparent'
 
   const patch = compileSVG(layer.svg, sideMinor)
@@ -68,8 +94,6 @@ export default function brushShape<G extends CanvasRenderingContext2D, I extends
     const y = position[strY] ?? position.yCenter
     supportCtx.drawImage(image, x, y, newWidth, newHeigh)
   }
-
-
 
   ctx.save()
   const filter = buildFilter(layer.filter)
