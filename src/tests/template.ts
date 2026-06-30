@@ -1,8 +1,8 @@
 import type { Font } from "../types";
 const FONTS_FROM_LOCAL: Font[] = [
   {
-    name: 'Updock',
-    url: 'https://fonts.gstatic.com/l/font?kit=nuF4D_3dVZ70UI9Siaqow2K0R17gSlqa5g1bhXMLVcvgkA-gPKWUiSPT&skey=f9e84b7c5790fca&v=v7',
+    name: 'Libre Barcode',
+    url: 'https://fonts.gstatic.com/s/librebarcode39text/v32/sJoa3KhViNKANw_E3LwoDXvs5Un0HQ1vT-0H0h5K.woff2',
   },
   {
     name: 'Roboto',
@@ -11,18 +11,6 @@ const FONTS_FROM_LOCAL: Font[] = [
   {
     name: 'Open Sans',
     url: './assets/fonts/OpenSans.ttf',
-  },
-  {
-    name: 'Ole',
-    url: './assets/fonts/Ole.woff2',
-  },
-  {
-    name: 'Playwrite England Joined',
-    url: './assets/fonts/PlaywriteEnglandJoined.woff2',
-  },
-  {
-    name: 'Bitcount Grid Double Regular',
-    url: './assets/fonts/BitcountGridDouble.ttf'
   }
 ]
 

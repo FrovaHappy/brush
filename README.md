@@ -1,238 +1,365 @@
-# Brush
+# 🖌️ Brush
 
-Una librería de canvas universal que funciona tanto en el navegador como en Node.js. Permite renderizar plantillas de dibujo con capas de texto y formas en un contexto de canvas.
+![Brush Banner](./assets/images/bg.png)
 
-El código fuente ya está disponible en GitHub: https://github.com/FrovaHappy/brush
+Una potente y flexible librería de **Canvas Universal** diseñada para funcionar perfectamente tanto en el **Navegador (Browser)** como en **Node.js**. Permite renderizar plantillas dinámicas compuestas por capas de formas e imágenes configurables, textos adaptables y filtros avanzados, facilitando la generación dinámica de imágenes, banners y recursos visuales.
 
-Puedes abrir issues, crear pull requests o hacer fork para contribuir. Si te gusta el proyecto, considera darle star.
+El código fuente está disponible en GitHub: [FrovaHappy/brush](https://github.com/FrovaHappy/brush).
 
-> Importante: la validación de url solo comprueba que sea string y no valida que la url sea segura o accesible.
+---
 
-## Instalación
+
+## 🚀 Características Principales
+
+*   **Universal:** Mismo código y comportamiento tanto en el cliente (Browser) como en el servidor (Node.js).
+*   **Capas Flexibles:** Soporte para capas de formas (`shape`) y de texto (`text`).
+*   **Extracción de Paletas Dinámicas:** Permite extraer automáticamente los colores dominantes y vibrantes de una imagen cargada y utilizarlos en otras capas a través de variables como `{{pallete_Vibrant}}`, `{{pallete_Muted}}`, etc.
+*   **Máscaras de Recorte SVG:** Permite recortar formas e imágenes utilizando cualquier trazado SVG.
+*   **Ajuste y Escalado:** Soporte para `objectFit` (`cover`, `contain`, `fill`) y transformaciones como rotaciones (`rotation`).
+*   **Tipografías Dinámicas:** Carga previa de fuentes del sistema o fuentes remotas (archivos `.ttf`, `.woff2`, etc.) mediante una API sencilla.
+*   **Filtros CSS:** Soporte completo de filtros de estilo (sombras, desenfoques, brillo, contraste, escala de grises, opacidad, saturación, sepia y más) aplicados directamente a las capas.
+*   **Validación Integrada:** Validación robusta del esquema de plantillas en tiempo de ejecución con **Zod**.
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+El proyecto utiliza un conjunto moderno de herramientas y librerías para garantizar un rendimiento óptimo y una compatibilidad multiplataforma:
+
+*   **Lenguaje Principal:** [TypeScript](https://www.typescriptlang.org/) para un tipado estricto y seguro.
+*   **Motor Canvas en Servidor:** [@napi-rs/canvas](https://github.com/brooooooklyn/canvas) para un renderizado ultra-rápido en Node.js mediante bindings nativos en Rust.
+*   **Extracción de Colores:** [colorthief](https://github.com/lokesh/color-thief) para analizar y extraer paletas de color armoniosas desde imágenes.
+*   **Procesamiento de Imágenes:** [Sharp](https://sharp.pixelplumbing.com/) para operaciones optimizadas de imágenes en Node.js.
+*   **Pruebas unitarias:** [Vitest](https://vitest.dev/) para asegurar el comportamiento esperado.
+*   **Calidad de Código:** [Biome](https://biomejs.dev/) para linting y formateo rápido.
+
+---
+
+## ⚡ Implementación Rápida
+
+Instala la librería en tu proyecto:
 
 ```bash
 npm install @frova_happy/brush
-
-# o usando unpkg
-import { brush } from 'https://unpkg.com/@frova_happy/brush@0.1.1/dist/web/index.js';
 ```
 
-### En el Navegador
+### Guía de Inicio
+
+Dependiendo de tu entorno, importa el módulo correspondiente:
+
+#### 🌐 En el Navegador (Browser)
+Puedes ver un ejemplo completo en el archivo [example/html/index.html](./example/html/index.html).
 
 ```javascript
-import { brush } from '@frova_happy/brush/web'; // importa la versión web
+import { brush, setFonts } from '@frova_happy/brush/browser';
 
-const template = { /* ... */ };
+// 1. Cargar fuentes personalizadas (opcional)
+await setFonts([
+  { name: 'Text', url: 'https://fonts.gstatic.com/s/loversquarrel/v25/Yq6N-LSKXTL-5bCy8ksBzpQ_-wArabs.woff2' }
+]);
 
-
-const canvas = await brush({
-  template,                 // plantilla (obligatorio)
-  filterText: {},           // valores para plantillas (opcional)
-  fonts: [                  // array de fuentes para preload (opcional)
-    { name: 'Science-Gothic', url: '/example/html/ScienceGothic.ttf' }
+// 2. Definir la plantilla
+const template = {
+  version: '1',
+  w: 800,
+  h: 400,
+  backgroundColor: '#f3f4f6',
+  layers: [
+    {
+      id: 'mi-texto',
+      type: 'text',
+      text: '¡Hola {{name}}!',
+      x: 400,
+      y: 200,
+      fontSize: 48,
+      fontFamily: 'Text',
+      color: '#1e3a8a',
+      align: 'center',
+      baseline: 'middle'
+    }
   ]
+};
+
+// 3. Renderizar en el canvas
+const canvas = await brush({
+  template,
+  filterText: { name: 'Desarrollador' }
 });
 
-document.body.appendChild(canvas); // agrega el canvas al DOM úsalo como necesites
+document.body.appendChild(canvas);
 ```
 
-### En Node.js
+#### 🟢 En Node.js
+Puedes ver un ejemplo completo en el archivo [example/node/index.js](./example/node/index.js).
 
 ```javascript
-import { brush } from '@frova_happy/brush'; // importa la versión de Node.js este utiliza '@napi-rs/canvas' internamente para renderizar
-import { writeFileSync } from 'fs';
+import { brush, setFonts } from '@frova_happy/brush/node';
+import { writeFile } from 'node:fs/promises';
 
-const template = { /* ... */ };
+// Cargar fuentes y renderizar
+await setFonts([{ name: 'Text', url: 'https://fonts.gstatic.com/...' }]);
 
-try {
-  const canvas = await brush({
-    template,
-    filterText: {},
-    fonts: [
-      { name: 'Science-Gothic', url: 'https://.../Science-Gothic.woff2' }
+const canvas = await brush({
+  template, // Estructura de plantilla
+  filterText: { name: 'Desarrollador' }
+});
+
+const buffer = await canvas.encode('png');
+await writeFile('./output.png', buffer);
+```
+
+#### ⚛️ En React
+Puedes explorar un ejemplo integrado dentro de la carpeta [example/react](./example/react).
+
+---
+
+## 🔌 API
+
+### `setFonts(fonts)`
+
+Carga y registra fuentes tipográficas externas **antes** de llamar a `brush()`. Las fuentes cargadas quedan disponibles para ser utilizadas en capas de tipo `text` mediante la propiedad `fontFamily`.
+
+```typescript
+type Font = {
+  name: string; // Nombre con el que se referenciará la fuente en fontFamily
+  url: string;  // URL remota (https://...) o ruta local relativa al proceso
+}
+
+setFonts(fonts: Font[]): Promise<void>
+```
+
+**Comportamiento:**
+- Si la fuente ya fue registrada (Node.js), se omite sin error.
+- En el navegador usa la API `FontFace`. En Node.js usa `GlobalFonts.register` de `@napi-rs/canvas`.
+- Si falla la carga de alguna fuente, emite un `console.warn` y continúa con las demás.
+
+**Ejemplo:**
+```javascript
+import { setFonts, brush } from '@frova_happy/brush/browser';
+
+await setFonts([
+  { name: 'MiFuente', url: 'https://example.com/fonts/MiFuente.woff2' },
+  { name: 'Roboto',   url: '/static/fonts/Roboto-Regular.ttf' }
+]);
+
+const canvas = await brush({
+  template: {
+    version: '1',
+    w: 800, h: 400,
+    layers: [
+      {
+        id: 'titulo',
+        type: 'text',
+        text: 'Hola mundo',
+        x: 400, y: 200,
+        fontFamily: 'MiFuente', // referencia al nombre registrado en setFonts
+        fontSize: 48,
+        color: '#ffffff',
+        textAlign: 'center',
+        textBaseline: 'middle'
+      }
     ]
-  });
-} catch (error) {
-  // el error puede ser de validación o de renderizado
-  console.error('Error al renderizar el canvas:', error);
-  process.exit(1);
-}
-
-writeFileSync('output.png', canvas.toBuffer('image/png'));
-```
-## Tipos TypeScript
-
-La librería incluye definiciones de tipos completas para TypeScript. Puedes importar los tipos de las siguientes maneras:
-
-```typescript
-// Importar tipos desde el paquete principal
-import type { Templete, Text, Shape, Filter } from '@frova_happy/brush';
+  },
+  filterText: {}
+});
 ```
 
-## Estructura de la Plantilla
+> [!IMPORTANT]
+> Siempre llama a `setFonts()` **antes** de `brush()`. Si `brush()` se ejecuta primero, las capas de texto usarán fuentes del sistema como fallback.
 
-La plantilla es un objeto que define el canvas y sus capas:
+---
+
+### `filterText`
+
+`filterText` es un objeto de pares clave–valor (`Record<string, string | undefined>`) que se pasa a `brush()`. Funciona como un sistema de **interpolación de variables** sobre toda la plantilla.
+
+Cualquier string de la plantilla que contenga `{{nombre}}` será reemplazado por el valor correspondiente en `filterText` antes de renderizar.
 
 ```typescript
-interface Template {
-  version: '1';
-  title: string;
-  w: number; // ancho
-  h: number; // alto
-  // Paleta de colores reutilizables para la plantilla. Las keys válidas son:
-  // `primary`, `secondary`, `accent`, `background`, `foreground`.
-  // Cada key puede ser un color en formato hexadecimal (#RGB, #RRGGBB, #RRGGBBAA),
-  // `rgb(...)` / `rgba(...)`, `hsl(...)` / `hsla(...)` o la cadena `transparent`.
-  // Las `layers` pueden usar una de estas keys (p. ej. color: 'primary') o
-  // proporcionar directamente un color en cualquiera de los formatos anteriores.
-  colors?: {
-    primary?: string;
-    secondary?: string;
-    accent?: string;
-    background?: string;
-    foreground?: string;
-    auto?: string;
-  };
-  layers: Array<TextLayer | ShapeLayer>;
-}
+type FilterText = Record<string, string | undefined>
+```
 
-Ejemplo de `colors` en la plantilla y uso en una capa:
+**Ejemplo básico:**
+```javascript
+const canvas = await brush({
+  template: {
+    version: '1',
+    w: 600, h: 200,
+    layers: [
+      {
+        id: 'saludo',
+        type: 'text',
+        text: 'Bienvenido, {{username}}! Nivel {{level}}',
+        x: 10, y: 100,
+        fontSize: 24,
+        color: '#000000'
+      }
+    ]
+  },
+  filterText: {
+    username: 'FrovaHappy',
+    level: '42'
+  }
+});
+// Resultado → "Bienvenido, FrovaHappy! Nivel 42"
+```
+
+#### **Variables de paleta de colores (`pallete_*`):**
+
+Si la plantilla tiene `layerColor` apuntando a una capa con imagen, `brush()` extrae automáticamente la paleta de esa imagen y la inyecta al `filterText` antes de renderizar. Las variables generadas son:
+
+| Variable | Descripción |
+| :--- | :--- |
+| `{{pallete_Vibrant}}` | Color vibrante principal de la imagen. |
+| `{{pallete_LightVibrant}}` | Variante vibrante clara. |
+| `{{pallete_DarkVibrant}}` | Variante vibrante oscura. |
+| `{{pallete_Muted}}` | Color apagado principal. |
+| `{{pallete_LightMuted}}` | Variante apagada clara. |
+| `{{pallete_DarkMuted}}` | Variante apagada oscura. |
+
+Estas variables pueden usarse en cualquier string del template, incluyendo colores de capas, filtros de sombra, etc.
+> [!IMPORTANT]
+> Algunos de los colores pueden no generarse, esto depende del rango de colores que maneje la imagen, ej: si una imagen esta en blanco y negro solo generara no mas de dos. el resto serán #000000
 
 ```javascript
 const template = {
   version: '1',
-  title: 'Ejemplo',
-  w: 800,
-  h: 600,
-  colors: {
-    background: '#ffffff',
-    primary: '#1e90ff',
-    accent: '#ff6b6b'
-  },
+  w: 800, h: 400,
+  backgroundColor: '{{pallete_LightVibrant}}', // color de fondo dinámico
+  layerColor: 'avatar',                          // extrae paleta de esta capa
   layers: [
-    { id: 't1', type: 'text', dx: 100, dy: 100, text: 'Hola', color: 'primary' }
+    {
+      id: 'avatar',
+      type: 'shape',
+      image: 'https://example.com/avatar.png',
+      x: 50, y: 100, w: 200, h: 200,
+      color: 'auto'
+    },
+    {
+      id: 'nombre',
+      type: 'text',
+      text: '{{username}}',
+      x: 300, y: 200,
+      fontSize: 40,
+      color: '{{pallete_DarkVibrant}}', // usa color extraído de la imagen
+      textAlign: 'center',
+      textBaseline: 'middle',
+      filter: {
+        'drop-shadow': '0px 4px 8px {{pallete_Muted}}'
+      }
+    }
   ]
 };
 ```
-```
 
-### Capa de Texto
+> [!NOTE]
+> Si una variable `{{nombre}}` no se encuentra en `filterText`, se reemplaza con el string `null_sanitized` y se emite un `console.warn`.
 
-```typescript
-interface TextLayer {
-  id: string;
-  type: 'text';
-  dx: number; // posición x
-  dy: number; // posición y
-  text: string;
-  size?: number; // tamaño de fuente (default: 16)
-  family?: string; // familia de fuente (default: 'Arial')
-  color?: string; // color (clave de `colors` como 'primary', color directo como '#fff' o 'auto')
-  weight?: number; // peso de fuente (default: 400)
-  align?: 'start' | 'end' | 'left' | 'right' | 'center';
-  baseline?: 'top' | 'hanging' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom';
-  globalAlpha?: number; // opacidad (0-1)
-  letterSpacing?: number;
-  maxWidth?: number;
-  filter?: Filter; // filtros CSS
-}
-```
+---
 
-### Capa de Forma
-
-```typescript
-interface ShapeLayer {
-  id: string;
-  type: 'shape';
-  dx: number; // posición x
-  dy: number; // posición y
-  dw?: number; // ancho
-  dh?: number; // alto
-  color?: string; // color de relleno (clave de `colors`, color directo como '#fff' o 'auto')
-  image?: string; // URL de imagen o placeholder
-  clip?: {
-    svg?: string; // SVG para recorte
-    align?: string; // alineación del clip
-  };
-  filter?: Filter; // filtros CSS
-}
-```
-
-## Filtros
-
-Los filtros CSS se pueden aplicar tanto a texto como a formas:
-
-```typescript
-interface Filter {
-  blur?: number;
-  brightness?: number;
-  contrast?: number;
-  dropShadow?: {
-    offsetX?: number;
-    offsetY?: number;
-    blurRadius?: number;
-    color: string;
-  };
-  grayscale?: number;
-  hueRotate?: number;
-  invert?: number;
-  opacity?: number;
-  saturate?: number;
-  sepia?: number;
-}
-```
-
-## Validación
-
-La librería incluye validación automática de plantillas usando Zod, el lo utiliza internamente antes de renderizar esto puede probocar error si la plantilla no es válida. También puedes usar la función `validateCanvas` para validar plantillas manualmente:
-
-```javascript
-import { validateCanvas } from '@frova_happy/brush';
-
-const result = validateCanvas(template);
-if (!result.ok) {
-  console.error('Errores de validación:', result.errors);
-} else {
-  console.log('Plantilla válida:', result.data);
-}
-```
+## 📖 Referencia Detallada de Propiedades del Templete
 
 
+### 1. Plantilla principal (`Templete`)
 
-### `brush` (Web / Node)
+Representa la configuración base del lienzo o canvas y sus capas principales.
+> [!Note]
+> Si declaras 'auto', en 'backgroundColor' o 'layer.color' y usa 'layerColor' este usa el color obtenido de '{{pallete_Vibrant}}' si no encuentra usara 'black'
 
-La función `brush` recibe un objeto de opciones y devuelve un `HTMLCanvasElement` en el navegador o un `Canvas` en Node.js.
+| Propiedad | Tipo | Requerido | Descripción |
+| :--- | :--- | :--- | :--- |
+| `version` | `'1'` | Sí | Versión de la estructura de plantilla. |
+| `w` | `number` | Sí | Ancho del lienzo en píxeles. |
+| `h` | `number` | Sí | Alto del lienzo en píxeles. |
+| `backgroundColor` | `string` | No | Color de fondo general (soporta HEX, RGB, HSL, gradientes o transparente). |
+| `layerColor` | `string` | No | ID de la capa de tipo `shape` (que contenga una imagen) de la cual se desea extraer la paleta de colores dinámicos, los cuales puedes usar usando {{valor}} en el templete, véase [filterText](#variables-de-paleta-de-colores-pallete_) |
+| `layers` | `Layer[]` | Sí | Array de capas que componen el diseño visual. |
 
-```typescript
-# BrushOptions
-type BrushOptions = {
-  template: Template;
-  filterText?: Record<string, string | number | undefined>;
-  fonts?: Array<{ name: string; url: string }>;
-}
+---
 
-async function brush(options: BrushOptions): Promise<HTMLCanvasElement | Canvas> | throws Error;
-```
+### 2. Capa de Forma / Imagen (`ShapeLayer`)
 
-## Dependencias
+Utilizada para renderizar rectángulos, imágenes completas u objetos recortados por trazados vectoriales.
 
-La librería incluye todas las dependencias necesarias automáticamente. No se requieren instalaciones adicionales.
+| Propiedad | Tipo | Requerido | Descripción |
+| :--- | :--- | :--- | :--- |
+| `id` | `string` | Sí | Identificador único de la capa. Utilizado para extraer colores si se asocia a `layerColor`. |
+| `type` | `'shape'` | Sí | Identifica el tipo de capa. |
+| `x` | `number` | Sí | Posición horizontal en el lienzo. |
+| `y` | `number` | Sí | Posición vertical en el lienzo. |
+| `w` | `number` | Sí | Ancho de la forma o imagen. |
+| `h` | `number` | Sí | Alto de la forma o imagen. |
+| `image` | `string` | No | URL o ruta de la imagen. Si no se provee, la capa actuará como una forma rectangular plana. |
+| `color` | `string` | Sí | Color de relleno o fallback. Soporta colores CSS habituales, o `'auto'` si se desea heredar el color extraído automáticamente del fondo o capa anterior. |
+| `scale` | `number` | No | Factor de escala de la imagen interna. Por defecto es `1`. |
+| `objectFit` | `'cover' \| 'contain' \| 'fill'` | No | Ajuste y proporción de la imagen dentro de los límites de la capa. |
+| `rotation` | `number` | No | Ángulo de rotación de la capa en grados (ej: `45`). |
+| `svg` | `string` | No | Cadena XML de SVG para utilizar como máscara de recorte (clipping path). |
+| `align` | `string` | No | Alineación de la máscara SVG. Ejemplo: `'center center'`, `'top left'`. |
+| `filter` | `Filter` | No | Filtros de estilo CSS aplicados a la forma. |
 
-## Limitaciones
-- Imágenes soportadas: PNG, JPG, JPEG (no se testeo con otros formatos)
-- Colores en formato hexadecimal (#RGB, #RRGGBB, #RRGGBBAA)
+---
 
-## Contribuir
+### 3. Capa de Texto (`TextLayer`)
 
-1. Clona el repositorio
-2. Instala dependencias: `npm install`
-3. Ejecuta tests: `npm test`
-4. Construye:
-    - `npm run build` para construir la librería
-    - `npm run dev:html` para correr el ejemplo HTML
-    - `npm run dev:react` para correr el ejemplo React
-    - `npm run dev:node` para correr el ejemplo Node.js
+Permite añadir elementos tipográficos dinámicos con soporte para saltos de línea automáticos y sustituciones.
 
-## Licencia
+| Propiedad | Tipo | Requerido | Descripción |
+| :--- | :--- | :--- | :--- |
+| `id` | `string` | Sí | Identificador único de la capa. |
+| `type` | `'text'` | Sí | Identifica el tipo de capa. |
+| `text` | `string` | Sí | Texto a mostrar. Soporta variables dinámicas utilizando la sintaxis `{{nombre_variable}}`. |
+| `x` | `number` | No | Posición horizontal. |
+| `y` | `number` | No | Posición vertical. |
+| `w` | `number` | No | Ancho disponible para el contenedor de texto. |
+| `maxWidth` | `number` | No | Ancho máximo permitido antes de forzar un salto de línea automático. |
+| `lineHeight` | `number` | No | Altura de la línea en píxeles para textos multilinea. |
+| `rotation` | `number` | No | Ángulo de rotación de la capa en grados. |
+| `fontSize` | `number` | No | Tamaño de la fuente en píxeles. Por defecto `16`. |
+| `fontFamily` | `string` | No | Nombre de la tipografía. Ej: `'Arial'`. Debe registrarse previamente si es externa. |
+| `fontWeight` | `string` | No | Grosor de la fuente. Ej: `'bold'`, `'normal'`, etc. |
+| `color` | `string` | Sí | Color del texto. Admite valores CSS o `'auto'`. |
+| `strokeColor` | `string` | No | Color del trazado o contorno exterior del texto. |
+| `strokeWidth` | `number` | No | Ancho del trazado de contorno en píxeles. |
+| `textAlign` | `'left' \| 'right' \| 'center' \| 'start' \| 'end'` | No | Alineación horizontal del texto. |
+| `textBaseline` | `'top' \| 'hanging' \| 'middle' \| 'alphabetic' \| 'ideographic' \| 'bottom'` | No | Alineación vertical del texto respecto a su coordenada base. Ej: `'middle'`. |
+| `filter` | `Filter` | No | Filtros de estilo CSS aplicados al texto. |
 
-Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
+---
+
+### 4. Objeto de Filtros (`Filter`)
+
+Filtros estilísticos inspirados en las especificaciones CSS Canvas.
+
+| Propiedad | Tipo | Ejemplo de Valor | Descripción |
+| :--- | :--- | :--- | :--- |
+| `blur` | `string` | `'5px'` | Desenfoque gaussiano de la capa. |
+| `brightness` | `string` | `'150%'` o `'1.5'` | Modificación del brillo del elemento. |
+| `contrast` | `string` | `'200%'` o `'2'` | Contraste de la capa. |
+| `grayscale` | `string` | `'100%'` o `'1'` | Conversión a escala de grises. |
+| `'hue-rotate'` | `string` | `'90deg'` | Rotación de tono del color. |
+| `invert` | `string` | `'100%'` o `'1'` | Inversión cromática. |
+| `opacity` | `string` | `'0.5'` o `'50%'` | Nivel de opacidad y transparencia. |
+| `saturate` | `string` | `'200%'` o `'2'` | Nivel de saturación cromática. |
+| `sepia` | `string` | `'100%'` o `'1'` | Efecto sepia. |
+| `'drop-shadow'` | `string` | `'10px 10px 5px rgba(0,0,0,0.5)'` | Sombras proyectadas con coordenadas, desenfoque y color. |
+
+---
+
+## 🤝 Colaboración y Contribución
+
+¡Las contribuciones son bienvenidas! Si deseas mejorar la librería, corregir un error o proponer nuevas características, por favor sigue estos pasos:
+
+1. Realiza un **Fork** del repositorio.
+2. Crea una rama para tu feature o fix: `git checkout -b feature/nueva-caracteristica`
+3. Instala dependencias y asegúrate de pasar los tests con `npm test` y el formateador con `npm run lint`.
+4. Envía tus cambios mediante un **Pull Request** detallando las mejoras realizadas.
+
+Para resolver o consultar dudas, también puedes abrir un [Issue en GitHub](https://github.com/FrovaHappy/brush/issues).
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia **MIT**. Consulta el archivo [LICENSE](./LICENSE) para obtener más información.
+

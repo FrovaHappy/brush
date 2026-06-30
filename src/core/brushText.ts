@@ -10,19 +10,19 @@ interface PaintTextProps {
 export default function brushText(options: PaintTextProps) {
   const { ctx, layer, filterText } = options
   // Prepare font settings before measuring text
-  const fam = layer.fontFamily ?? layer.family ?? 'sans-serif'
+  const fam = layer.fontFamily ?? 'sans-serif'
   const family = fam.includes(' ') ? `"${fam}"` : fam
   let color = layer.color
   if (color === 'auto') {
     color = filterText.pallete_Vibrant as string || '#000'
   }
   ctx.save() // save the current state of the canvas
-  const fontSize = layer.fontSize ?? layer.size ?? 16
-  const fontWeight = layer.fontWeight ?? layer.weight ?? 'normal'
+  const fontSize = layer.fontSize ?? 16
+  const fontWeight = layer.fontWeight ?? 'normal'
   ctx.font = `${fontWeight} ${fontSize}px ${family}`
 
-  const posX = layer.x ?? layer.dx ?? 0
-  const posY = layer.y ?? layer.dy ?? 0
+  const posX = layer.x ?? 0
+  const posY = layer.y ?? 0
 
   if (layer.rotation) {
     ctx.translate(posX, posY)
@@ -31,8 +31,8 @@ export default function brushText(options: PaintTextProps) {
   }
 
   // Global Settings
-  const textAlign = (layer.textAlign ?? layer.align ?? 'start') as CanvasTextAlign
-  const textBaseline = (layer.textBaseline ?? layer.baseline ?? 'alphabetic') as CanvasTextBaseline
+  const textAlign = (layer.textAlign ?? 'start') as CanvasTextAlign
+  const textBaseline = (layer.textBaseline ?? 'alphabetic') as CanvasTextBaseline
   ctx.textAlign = textAlign
   ctx.textBaseline = textBaseline
   ctx.fillStyle = color
