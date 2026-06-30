@@ -1,6 +1,6 @@
 {
   "name": "@frova_happy/brush",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Una librería de canvas universal que funciona tanto en el navegador como en Node.js",
   "type": "module",
   "exports": {
@@ -19,12 +19,17 @@
     "LICENSE"
   ],
   "scripts": {
+    "clean": "rimraf dist",
     "build:js": "node build.mjs",
     "build:types": "tsc -p tsconfig.types.node.json && tsc -p tsconfig.types.browser.json",
     "build": "npm run clean && npm run build:js && npm run build:types",
-    "clean": "rimraf dist",
     "lint": "biome lint",
     "test": "vitest",
+    "support:node": "npm run build && npm link && npm install --prefix example/node",
+    "dev:node": "npm run support:node && node example/node/index.js",
+    "dev:html": "npx -y serve -l 3000",
+    "dev:react": "npm run build && npm install --prefix example/react && npm run dev --prefix example/react",
+    "example:node": "npm run support:node && node example/node/index.js",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -41,7 +46,6 @@
   "dependencies": {
     "@napi-rs/canvas": "0.1.88",
     "colorthief": "3.3.1",
-    "node-vibrant": "4.0.4",
     "sharp": "0.35.1"
   },
   "devDependencies": {

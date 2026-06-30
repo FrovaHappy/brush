@@ -1,65 +1,100 @@
 import React, { useEffect, useRef } from 'react';
-import { brush } from '@frova_happy/brush/web';
+import { brush, setFonts } from '@frova_happy/brush/browser';
 
 function App() {
-  const canvasRef = useRef(null);
+  const containerRef = useRef(null);
 
   const template = {
     version: '1',
-    title: 'Ejemplo React',
-    w: 500,
-    h: 300,
-    bg_color: '#e0e0e0',
+    w: 800,
+    h: 400,
+    colors: {
+      background: '{{pallete_LightVibrant}}',
+    },
+    layerColor: 'image',
     layers: [
       {
-        id: 'texto1',
-        type: 'text',
-        family: 'Science-Gothic',
-        dx: 50,
-        dy: 50,
-        text: 'Hola desde React',
-        size: 24,
-        color: '#000000'
+        id: 'image',
+        type: 'shape',
+        image: 'https://media.tenor.com/d_pL1WslyB8AAAAM/anime-pout.gif',
+        svg: '<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 24 24" width="512" height="512"><path d="M13 0h6a5 5 0 0 1 5 5v6H13Zm-2 0h-.959L0 10.041V11h3.172L11 3.172Zm2 18 5-5h-5Zm11-5h-3.172L13 20.828V24h.959L24 13.959Zm-13 0H0v6a5 5 0 0 0 5 5h6Zm0-7-5 5h5Zm5.787 18H19a5 5 0 0 0 5-5v-2.213ZM7.213 0H5a5 5 0 0 0-5 5v2.213Z"/></svg>',
+        x: 300,
+        y: 50,
+        w: 200,
+        h: 200,
+        color: 'secondary',
+        filter: {
+          opacity: '0.8',
+          'drop-shadow': '0px 10px 20px rgba(0,0,0,0.5)',
+        },
       },
       {
-        id: 'forma1',
-        type: 'shape',
-        dx: 200,
-        dy: 200,
-        dw: 100,
-        dh: 100,
-        color: '#0000ff'
-      }
-    ]
+        id: 'title_text',
+        type: 'text',
+        text: '¡Hola {{name}}!',
+        x: 400,
+        y: 290,
+        fontSize: 48,
+        fontFamily: 'Arial',
+        color: 'primary',
+        align: 'center',
+        baseline: 'middle',
+      },
+      {
+        id: 'subtitle_text',
+        type: 'text',
+        text: 'Implementación rápida con Brush en React.js',
+        x: 400,
+        y: 340,
+        fontSize: 32,
+        fontFamily: 'Text',
+        color: '{{pallete_LightMuted}}',
+        align: 'center',
+        baseline: 'middle',
+        filter: {
+          'drop-shadow': '0px 2px 2px {{pallete_Muted}}',
+        }
+      },
+    ],
   };
 
+  const fonts = [
+    {
+      name: 'Text',
+      url: 'https://fonts.gstatic.com/s/loversquarrel/v25/Yq6N-LSKXTL-5bCy8ksBzpQ_-wArabs.woff2'
+    }
+  ];
+
   useEffect(() => {
+    let active = true;
+
     async function renderCanvas() {
       try {
+        await setFonts(fonts);
         const canvas = await brush({
-          template, filterText: {}, castColor: undefined, fonts: [
-            { name: 'Science-Gothic', url: 'https://fonts.gstatic.com/s/sciencegothic/v5/CHydV-7EH1X7aiQh5jPNDTJnVUAvhrL0sQdjzDQhk11iTp6mX-ANuf1d_83dPfZJ7Lvcvg8EGYzcW7TqdtQ.woff2' }
-          ]
+          template,
+          filterText: {
+            name: 'Desarrollador',
+          },
         });
-        if (canvasRef.current) {
-          canvasRef.current.innerHTML = '';
-          canvasRef.current.appendChild(canvas);
+        if (active && containerRef.current) {
+          containerRef.current.innerHTML = '';
+          containerRef.current.appendChild(canvas);
         }
-        console.log('Canvas renderizado en React');
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error rendering canvas in React:', error);
       }
     }
 
     renderCanvas();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>Ejemplo de Brush en React</h1>
-      <p>Canvas renderizado con la librería Brush:</p>
-      <div ref={canvasRef} style={{ border: '1px solid #ccc', display: 'inline-block' }}></div>
-    </div>
+    <div ref={containerRef}></div>
   );
 }
 

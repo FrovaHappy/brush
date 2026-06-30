@@ -14,7 +14,7 @@ export default function brushShape<G extends CanvasRenderingContext2D, I extends
   const { ctx, layer, image, filterText, supportCtx } = props
   let color = layer.color
   if (color === 'auto') {
-    color = filterText.ColorVibrant || '#000'
+    color = filterText.pallete_Vibrant || '#000'
   }
 
   const dimension = {

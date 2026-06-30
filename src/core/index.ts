@@ -15,12 +15,16 @@ interface BrushCanvasProps<C extends CanvasRenderingContext2D, G extends HTMLIma
 export default function brushCanvas<C extends CanvasRenderingContext2D, I extends HTMLImageElement | undefined>(props: BrushCanvasProps<C, I>) {
   const { ctx, supportCtx, template, filterText, images } = props
   const { layers, ...base } = template
+  let color = base.colors.background
+  if (color === 'auto') {
+    color = filterText.pallete_Vibrant || '#000'
+  }
 
   ctx.clearRect(0, 0, base.w, base.h) // reset canvas in the Frontend
   ctx.save()
   if (base.colors.background) {
     // save the current state of the canvas
-    ctx.fillStyle = base.colors.background || 'transparent'
+    ctx.fillStyle = color || 'transparent'
     ctx.fillRect(0, 0, base.w, base.h)
   }
   ctx.restore() // restore the previous state of the canvas

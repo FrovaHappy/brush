@@ -11,6 +11,7 @@ const template: Templete = {
   w: 800,
   h: 400,
   colors: {
+    background: '#d1d1d1fa'
   },
   layerColor: 'layer2',
   layers: [
@@ -30,7 +31,7 @@ const template: Templete = {
       color: 'auto',
       filter: {
         opacity: '0.7',
-        "drop-shadow": '0px 0px 20px {{ColorVibrant}}'
+        "drop-shadow": '0px 0px 20px {{pallete_Vibrant}}'
       }
     },
     {
@@ -38,20 +39,20 @@ const template: Templete = {
       id: 'start',
       type: 'shape',
       svg: VAR.GEOMETRIC_SHAPES.circle,
-      color: '{{ColorLightVibrant}}',
+      color: '{{pallete_LightVibrant}}',
       x: 50,
       y: 50,
       w: 100,
       h: 100,
       filter: {
         "opacity": '1',
-        "drop-shadow": '30px 10px 4px {{ColorVibrant}}'
+        "drop-shadow": '30px 10px 4px {{pallete_Vibrant}}'
       }
     },
     {
       type: 'text',
-      color: 'auto', // tomo el color de la imagen este puede ser el avatar
-      'fontFamily': 'Updock', //no funciona
+      color: 'auto',
+      'fontFamily': 'Updock',
       'fontSize': 32,
       maxWidth: 50,
       rotation: -90,

@@ -10,24 +10,31 @@ interface PaintTextProps {
 export default function brushText(options: PaintTextProps) {
   const { ctx, layer, filterText } = options
   // Prepare font settings before measuring text
-  const fam = layer.fontFamily ?? 'sans-serif'
+  const fam = layer.fontFamily ?? layer.family ?? 'sans-serif'
   const family = fam.includes(' ') ? `"${fam}"` : fam
   let color = layer.color
   if (color === 'auto') {
-    color = filterText.ColorVibrant as string || '#000'
+    color = filterText.pallete_Vibrant as string || '#000'
   }
   ctx.save() // save the current state of the canvas
-  ctx.font = `${layer.fontWeight ?? 'normal'} ${layer.fontSize}px ${family}`
+  const fontSize = layer.fontSize ?? layer.size ?? 16
+  const fontWeight = layer.fontWeight ?? layer.weight ?? 'normal'
+  ctx.font = `${fontWeight} ${fontSize}px ${family}`
+
+  const posX = layer.x ?? layer.dx ?? 0
+  const posY = layer.y ?? layer.dy ?? 0
 
   if (layer.rotation) {
-    ctx.translate(layer.x, layer.y)
+    ctx.translate(posX, posY)
     ctx.rotate((layer.rotation * Math.PI) / 180)
-    ctx.translate(-layer.x, -layer.y)
+    ctx.translate(-posX, -posY)
   }
 
   // Global Settings
-  ctx.textAlign = layer.textAlign ?? 'start'
-  ctx.textBaseline = layer.textBaseline ?? 'alphabetic'
+  const textAlign = (layer.textAlign ?? layer.align ?? 'start') as CanvasTextAlign
+  const textBaseline = (layer.textBaseline ?? layer.baseline ?? 'alphabetic') as CanvasTextBaseline
+  ctx.textAlign = textAlign
+  ctx.textBaseline = textBaseline
   ctx.fillStyle = color
 
   if (layer.strokeColor) {
@@ -39,7 +46,16 @@ export default function brushText(options: PaintTextProps) {
   if (filter) ctx.filter = filter
 
   const maxW = layer.maxWidth ?? layer.w
-  const lHeight = layer.lineHeight ?? (layer.fontSize * 1.2)
+  const lHeight = layer.lineHeight ?? (fontSize * 1.2)
+
+  let lineX = posX
+  if (maxW && maxW > 0) {
+    if (textAlign === 'center') {
+      lineX = posX + maxW / 2
+    } else if (textAlign === 'right' || textAlign === 'end') {
+      lineX = posX + maxW
+    }
+  }
 
   if (maxW && maxW > 0) {
     const words = layer.text.split(' ')
@@ -51,9 +67,9 @@ export default function brushText(options: PaintTextProps) {
       const metrics = ctx.measureText(testLine)
       if (metrics.width > maxW && n > 0) {
         if (layer.strokeColor) {
-          ctx.strokeText(currentLine, layer.x, layer.y + lineOffsetY)
+          ctx.strokeText(currentLine, lineX, posY + lineOffsetY)
         }
-        ctx.fillText(currentLine, layer.x, layer.y + lineOffsetY)
+        ctx.fillText(currentLine, lineX, posY + lineOffsetY)
         currentLine = words[n]
         lineOffsetY += lHeight
       } else {
@@ -61,14 +77,14 @@ export default function brushText(options: PaintTextProps) {
       }
     }
     if (layer.strokeColor) {
-      ctx.strokeText(currentLine, layer.x, layer.y + lineOffsetY)
+      ctx.strokeText(currentLine, lineX, posY + lineOffsetY)
     }
-    ctx.fillText(currentLine, layer.x, layer.y + lineOffsetY)
+    ctx.fillText(currentLine, lineX, posY + lineOffsetY)
   } else {
     if (layer.strokeColor) {
-      ctx.strokeText(layer.text, layer.x, layer.y)
+      ctx.strokeText(layer.text, lineX, posY)
     }
-    ctx.fillText(layer.text, layer.x, layer.y)
+    ctx.fillText(layer.text, lineX, posY)
   }
 
   ctx.restore() // restore the previous state of the canvas

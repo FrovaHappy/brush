@@ -1,24 +1,4 @@
 import type { Font } from "../types";
-
-const FONTS_FROM_CDN: Font[] = [
-  {
-    name: 'Roboto',
-    url: 'https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxP.ttf',
-  },
-  {
-    name: 'Open Sans',
-    url: 'https://fonts.gstatic.com/s/opensans/v29/mem8YaGs126MiZpBA-U1UpcaXcl0Aw.ttf',
-  },
-  {
-    name: 'Ole',
-    url: 'https://fonts.gstatic.com/s/ole/v6/dFazZf6Z-rdM8vY7.woff2',
-  },
-  {
-    name: 'Playwrite England Joined',
-    url: 'https://fonts.gstatic.com/l/font?kit=k3kLo8wSPe9dzQ1UGbvobAPhY7KP0QrM4ozNenTi2OoAAJ29kwI6hE4&skey=5be5ec70f90e1d67&v=v11',
-  }]
-
-
 const FONTS_FROM_LOCAL: Font[] = [
   {
     name: 'Updock',
@@ -84,4 +64,4 @@ const GEOMETRIC_SHAPES = {
   abstractZigzag: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="20,10 80,10 50,40 90,40 40,90 60,90 10,50 40,50" fill="currentColor" /></svg>'
 };
 
-export default { FONTS_FROM_CDN, FONTS_FROM_LOCAL, FILTER_TEXT, GEOMETRIC_SHAPES }
+export default { FONTS_FROM_LOCAL, FILTER_TEXT, GEOMETRIC_SHAPES }

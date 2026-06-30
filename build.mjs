@@ -18,7 +18,8 @@ const builds = [
     platform: 'node',
     format: 'esm',
     outfile: 'dist/node/index.js',
-    external: ['@napi-rs/canvas', 'node-vibrant'],
+    minify: true,
+    external: ['@napi-rs/canvas', 'colorthief', 'sharp'],
   },
 ];
 

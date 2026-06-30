@@ -56,7 +56,7 @@ export async function includePalettes(image: HTMLImageElement | Buffer | null, f
     const result: Record<string, string> = {};
     for (const [key, swatch] of Object.entries(palette)) {
       if (swatch) {
-        result[`Color${key}`] = swatch.color.hex();
+        result[`pallete_${key}`] = swatch.color.hex();
       }
     }
     return { ...filterText, ...result };
