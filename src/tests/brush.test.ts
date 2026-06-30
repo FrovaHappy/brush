@@ -10,9 +10,7 @@ const template: Templete = {
   version: '1',
   w: 800,
   h: 400,
-  colors: {
-    background: '#d1d1d1fa'
-  },
+  backgroundColor: '#d1d1d1fa',
   layerColor: 'layer2',
   layers: [
     {

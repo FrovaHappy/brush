@@ -12,10 +12,7 @@ export interface Templete {
   version: '1';
   w: number;
   h: number;
-  colors: {
-    background?: string;
-    [key: string]: string | undefined;
-  };
+  backgroundColor?: string;
   layerColor?: string; // use layers.id 
   layers: Layer[];
 }
