@@ -16,8 +16,7 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE",
-    "assets/images/bg.png"
+    "LICENSE"
   ],
   "scripts": {
     "clean": "rimraf dist",
