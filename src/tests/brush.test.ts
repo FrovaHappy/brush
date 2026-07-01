@@ -258,7 +258,7 @@ const template: Templete = {
       y: 172,
       w: 120,
       h: 28,
-      color: '{{pallete_Muted}}',
+      color: '{{pallete_DarkMuted}}',
       filter: { opacity: '0.20' }
     },
     {

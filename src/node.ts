@@ -1,7 +1,6 @@
 
 import { Canvas, loadImage, type Image, GlobalFonts, Path2D } from '@napi-rs/canvas'
-// biome-ignore lint/style/useNodejsImportProtocol: conflicts with bundler module resolution
-import { Buffer } from 'buffer';
+import { Buffer } from 'node:buffer';
 import brushCore from "./core";
 import type { FilterText, Font, ShapeLayer, Templete } from './types';
 import { includePalettes, isValidUrl, sanitizeTemplate } from "./platforms/utils";
@@ -80,7 +79,7 @@ export async function brush(props: BrushProps): Promise<Canvas> {
   const imageLayer = template.layers.find(l => l.id === template.layerColor && l.type === 'shape') as ShapeLayer | undefined;
   const imageBuffer = await getImageBuffer(imageLayer?.image)
   const filterText = await includePalettes(imageBuffer, props.filterText);
-  template = sanitizeTemplate(props.template, filterText);
+  template = sanitizeTemplate(props.template, filterText, true);
   const images = await getImages(template);
 
   const canvas = new Canvas(template.w, template.h);
@@ -95,6 +94,5 @@ export async function brush(props: BrushProps): Promise<Canvas> {
     images: images as unknown as Record<string, HTMLImageElement | undefined>,
     filterText,
   });
-  console.log(template, filterText);
   return canvas;
 }

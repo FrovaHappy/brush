@@ -27,7 +27,7 @@ async function getImages(template: Templete): Promise<Record<string, HTMLImageEl
 }
 
 export async function setFonts(fonts: Font[]) {
-  const $fonts = document.fonts as any;
+  const $fonts = document.fonts;
   for (const font of fonts) {
     const { url, name } = font;
     const parseName = name.includes(' ') ? `"${name}"` : name;
@@ -63,7 +63,7 @@ export async function brush(props: BrushProps): Promise<HTMLCanvasElement> {
   }
 
   const filterText = await includePalettes(loadedImage, props.filterText);
-  template = sanitizeTemplate(props.template, filterText);
+  template = sanitizeTemplate(props.template, filterText, true);
   const images = await getImages(template);
 
   const canvas = document.createElement('canvas');

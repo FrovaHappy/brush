@@ -28,15 +28,15 @@ import { getSwatches } from 'colorthief'
  * console.log(sanitized.layers[0].text); // Output: 'Hello World!'
  * 
  */
-export function sanitizeTemplate<T>(template: T, values: Record<string, string | number | undefined>): T {
+export function sanitizeTemplate<T>(template: T, values: Record<string, string | number | undefined>, log = false): T {
   try {
     let result = JSON.stringify(template);
     for (const [key, value] of Object.entries(values)) {
       result = result.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
     }
     for (const match of result.matchAll(/{{(.*?)}}/g)) {
-      console.warn(`Variable ${match[0]} not found in values, replacing with empty string`);
-      result = result.replace(new RegExp(match[0], 'g'), 'null_sanitized');
+      if (log) console.warn(`Variable ${match[0]} not found in values, replacing with empty string`);
+      result = result.replace(new RegExp(match[0], 'g'), '');
     }
     return JSON.parse(result) as T;
   }
