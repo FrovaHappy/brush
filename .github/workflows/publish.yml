@@ -80,6 +80,6 @@ jobs:
 
       - name: Publish to npm
         if: ${{ steps.verify.outputs.should_publish == 'true' }}
-        run: pnpm publish
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
