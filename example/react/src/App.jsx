@@ -8,9 +8,7 @@ function App() {
     version: '1',
     w: 800,
     h: 400,
-    colors: {
-      background: '{{pallete_LightVibrant}}',
-    },
+    backgroundColor: '{{pallete_LightVibrant}}',
     layerColor: 'image',
     layers: [
       {
@@ -37,7 +35,7 @@ function App() {
         fontSize: 48,
         fontFamily: 'Arial',
         color: 'primary',
-        align: 'center',
+        textAlign: 'center',
         baseline: 'middle',
       },
       {
@@ -49,7 +47,7 @@ function App() {
         fontSize: 32,
         fontFamily: 'Text',
         color: '{{pallete_LightMuted}}',
-        align: 'center',
+        textAlign: 'center',
         baseline: 'middle',
         filter: {
           'drop-shadow': '0px 2px 2px {{pallete_Muted}}',

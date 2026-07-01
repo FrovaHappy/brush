@@ -6,9 +6,8 @@ const template = {
   version: '1',
   w: 800,
   h: 400,
-  colors: {
-    background: '{{pallete_LightVibrant}}',
-  },
+  backgroundColor: '{{pallete_LightVibrant}}',
+
   layerColor: 'image',
   layers: [
     // Capa de forma decorativa (círculo)
@@ -37,7 +36,7 @@ const template = {
       fontSize: 48,
       fontFamily: 'Arial',
       color: 'primary',
-      align: 'center',
+      textAlign: 'center',
       baseline: 'middle',
     },
     // Capa de subtítulo
@@ -50,7 +49,7 @@ const template = {
       fontSize: 20,
       fontFamily: 'Text', // usa la fuente personalizada cargada
       color: '{{pallete_LightMuted}}',
-      align: 'center',
+      textAlign: 'center',
       baseline: 'middle',
       filter: {
         opacity: '0.8',

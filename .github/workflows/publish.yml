@@ -17,11 +17,17 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
 
       - name: Verify commit on `main`, valid tag, and unpublished version
         id: verify
@@ -66,14 +72,14 @@ jobs:
 
       - name: Install dependencies
         if: ${{ steps.verify.outputs.should_publish == 'true' }}
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build package
         if: ${{ steps.verify.outputs.should_publish == 'true' }}
-        run: npm run build
+        run: pnpm run build
 
       - name: Publish to npm
         if: ${{ steps.verify.outputs.should_publish == 'true' }}
-        run: npm publish
+        run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
