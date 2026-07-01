@@ -26,7 +26,7 @@
     "build": "pnpm run clean && pnpm run build:js && pnpm run build:types",
     "lint": "biome lint",
     "test": "vitest",
-    "build:publish": "pnpm run build && pnpm pack",
+    "build:publish": "pnpm run build && npm link",
     "dev:node": "pnpm run build:publish && cd example/node && pnpm install && node index.js",
     "dev:html": "cd example/html && pnpx -y serve -l 3000",
     "dev:react": "pnpm run build:publish && cd example/react && pnpm install && pnpm run dev",
