@@ -41,7 +41,7 @@
     "browser",
     "2d"
   ],
-  "author": "",
+  "author": "FrovaHappy",
   "license": "MIT",
   "dependencies": {
     "@napi-rs/canvas": "1.0.2",
