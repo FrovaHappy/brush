@@ -48,7 +48,7 @@ npm install @frova_happy/brush
 Dependiendo de tu entorno, importa el módulo correspondiente:
 
 #### 🌐 En el Navegador (Browser)
-Puedes ver un ejemplo completo en el archivo [example/html/index.html](./example/html/index.html).
+Puedes ver un ejemplo completo en el archivo [example/html/index.html](https://github.com/FrovaHappy/brush/blob/main/example/html/index.html).
 
 ```javascript
 import { brush, setFonts } from '@frova_happy/brush/browser';
@@ -90,7 +90,7 @@ document.body.appendChild(canvas);
 ```
 
 #### 🟢 En Node.js
-Puedes ver un ejemplo completo en el archivo [example/node/index.js](./example/node/index.js).
+Puedes ver un ejemplo completo en el archivo [example/node/index.js](https://github.com/FrovaHappy/brush/blob/main/example/node/index.js).
 
 ```javascript
 import { brush, setFonts } from '@frova_happy/brush/node';
@@ -109,7 +109,7 @@ await writeFile('./output.png', buffer);
 ```
 
 #### ⚛️ En React
-Puedes explorar un ejemplo integrado dentro de la carpeta [example/react](./example/react).
+Puedes explorar un ejemplo integrado dentro de la carpeta [example/react](https://github.com/FrovaHappy/brush/blob/main/example/react).
 
 ---
 
