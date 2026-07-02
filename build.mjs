@@ -8,7 +8,6 @@ const builds = [
     bundle: true,
     platform: 'browser',
     format: 'esm',
-    minify: true,
     outfile: 'dist/browser/index.js',
     external: ['@napi-rs/canvas'],
   },
@@ -18,8 +17,7 @@ const builds = [
     platform: 'node',
     format: 'esm',
     outfile: 'dist/node/index.js',
-    minify: true,
-    external: ['@napi-rs/canvas', 'colorthief', 'sharp'],
+    external: ['@napi-rs/canvas', 'colorthief'],
   },
 ];
 
