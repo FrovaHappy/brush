@@ -5,20 +5,20 @@
 Una potente y flexible librería de **Canvas Universal** diseñada para funcionar perfectamente tanto en el **Navegador (Browser)** como en **Node.js**. Permite renderizar plantillas dinámicas compuestas por capas de formas e imágenes configurables, textos adaptables y filtros avanzados, facilitando la generación dinámica de imágenes, banners y recursos visuales.
 
 El código fuente está disponible en GitHub: [FrovaHappy/brush](https://github.com/FrovaHappy/brush).
+Deja tu estrella si te gusta el proyecto y ayúdame a mejorarlo.
 
 ---
 
-
 ## 🚀 Características Principales
 
-*   **Universal:** Mismo código y comportamiento tanto en el cliente (Browser) como en el servidor (Node.js).
-*   **Capas Flexibles:** Soporte para capas de formas (`shape`) y de texto (`text`).
-*   **Extracción de Paletas Dinámicas:** Permite extraer automáticamente los colores dominantes y vibrantes de una imagen cargada y utilizarlos en otras capas a través de variables como `{{pallete_Vibrant}}`, `{{pallete_Muted}}`, etc.
-*   **Máscaras de Recorte SVG:** Permite recortar formas e imágenes utilizando cualquier trazado SVG.
-*   **Ajuste y Escalado:** Soporte para `objectFit` (`cover`, `contain`, `fill`) y transformaciones como rotaciones (`rotation`).
-*   **Tipografías Dinámicas:** Carga previa de fuentes del sistema o fuentes remotas (archivos `.ttf`, `.woff2`, etc.) mediante una API sencilla.
-*   **Filtros CSS:** Soporte completo de filtros de estilo (sombras, desenfoques, brillo, contraste, escala de grises, opacidad, saturación, sepia y más) aplicados directamente a las capas.
-*   **Validación Integrada:** Validación robusta del esquema de plantillas en tiempo de ejecución con **Zod**.
+* **Universal:** Mismo código y comportamiento tanto en el cliente (Browser) como en el servidor (Node.js).
+* **Capas Flexibles:** Soporte para capas de formas (`shape`) y de texto (`text`).
+* **Extracción de Paletas Dinámicas:** Permite extraer automáticamente los colores dominantes y vibrantes de una imagen cargada y utilizarlos en otras capas a través de variables como `{{pallete_Vibrant}}`, `{{pallete_Muted}}`, etc.
+* **Máscaras de Recorte SVG:** Permite recortar formas e imágenes utilizando cualquier trazado SVG.
+* **Ajuste y Escalado:** Soporte para `objectFit` (`cover`, `contain`, `fill`) y transformaciones como rotaciones (`rotation`).
+* **Tipografías Dinámicas:** Carga previa de fuentes del sistema o fuentes remotas (archivos `.ttf`, `.woff2`, etc.) mediante una API sencilla.
+* **Filtros CSS:** Soporte completo de filtros de estilo (sombras, desenfoques, brillo, contraste, escala de grises, opacidad, saturación, sepia y más) aplicados directamente a las capas.
+* **Validación Integrada:** Validación robusta del esquema de plantillas en tiempo de ejecución con **Zod**.
 
 ---
 
@@ -26,12 +26,12 @@ El código fuente está disponible en GitHub: [FrovaHappy/brush](https://github.
 
 El proyecto utiliza un conjunto moderno de herramientas y librerías para garantizar un rendimiento óptimo y una compatibilidad multiplataforma:
 
-*   **Lenguaje Principal:** [TypeScript](https://www.typescriptlang.org/) para un tipado estricto y seguro.
-*   **Motor Canvas en Servidor:** [@napi-rs/canvas](https://github.com/brooooooklyn/canvas) para un renderizado ultra-rápido en Node.js mediante bindings nativos en Rust.
-*   **Extracción de Colores:** [colorthief](https://github.com/lokesh/color-thief) para analizar y extraer paletas de color armoniosas desde imágenes.
-*   **Procesamiento de Imágenes:** [Sharp](https://sharp.pixelplumbing.com/) para operaciones optimizadas de imágenes en Node.js.
-*   **Pruebas unitarias:** [Vitest](https://vitest.dev/) para asegurar el comportamiento esperado.
-*   **Calidad de Código:** [Biome](https://biomejs.dev/) para linting y formateo rápido.
+* **Lenguaje Principal:** [TypeScript](https://www.typescriptlang.org/) para un tipado estricto y seguro.
+* **Motor Canvas en Servidor:** [@napi-rs/canvas](https://github.com/brooooooklyn/canvas) para un renderizado ultra-rápido en Node.js mediante bindings nativos en Rust.
+* **Extracción de Colores:** [colorthief](https://github.com/lokesh/color-thief) para analizar y extraer paletas de color armoniosas desde imágenes.
+* **Procesamiento de Imágenes:** [Sharp](https://sharp.pixelplumbing.com/) para operaciones optimizadas de imágenes en Node.js.
+* **Pruebas unitarias:** [Vitest](https://vitest.dev/) para asegurar el comportamiento esperado.
+* **Calidad de Código:** [Biome](https://biomejs.dev/) para linting y formateo rápido.
 
 ---
 
@@ -48,6 +48,7 @@ npm install @frova_happy/brush
 Dependiendo de tu entorno, importa el módulo correspondiente:
 
 #### 🌐 En el Navegador (Browser)
+
 Puedes ver un ejemplo completo en el archivo [example/html/index.html](https://github.com/FrovaHappy/brush/blob/main/example/html/index.html).
 
 ```javascript
@@ -90,6 +91,7 @@ document.body.appendChild(canvas);
 ```
 
 #### 🟢 En Node.js
+
 Puedes ver un ejemplo completo en el archivo [example/node/index.js](https://github.com/FrovaHappy/brush/blob/main/example/node/index.js).
 
 ```javascript
@@ -109,6 +111,7 @@ await writeFile('./output.png', buffer);
 ```
 
 #### ⚛️ En React
+
 Puedes explorar un ejemplo integrado dentro de la carpeta [example/react](https://github.com/FrovaHappy/brush/blob/main/example/react).
 
 ---
@@ -129,11 +132,13 @@ setFonts(fonts: Font[]): Promise<void>
 ```
 
 **Comportamiento:**
-- Si la fuente ya fue registrada (Node.js), se omite sin error.
-- En el navegador usa la API `FontFace`. En Node.js usa `GlobalFonts.register` de `@napi-rs/canvas`.
-- Si falla la carga de alguna fuente, emite un `console.warn` y continúa con las demás.
+
+* Si la fuente ya fue registrada (Node.js), se omite sin error.
+* En el navegador usa la API `FontFace`. En Node.js usa `GlobalFonts.register` de `@napi-rs/canvas`.
+* Si falla la carga de alguna fuente, emite un `console.warn` y continúa con las demás.
 
 **Ejemplo:**
+
 ```javascript
 import { setFonts, brush } from '@frova_happy/brush/browser';
 
@@ -180,6 +185,7 @@ type FilterText = Record<string, string | undefined>
 ```
 
 **Ejemplo básico:**
+
 ```javascript
 const canvas = await brush({
   template: {
@@ -258,7 +264,6 @@ const template = {
 ---
 
 ## 📖 Referencia Detallada de Propiedades del Templete
-
 
 ### 1. Plantilla principal (`Templete`)
 
@@ -362,4 +367,3 @@ Para resolver o consultar dudas, también puedes abrir un [Issue en GitHub](http
 ## 📄 Licencia
 
 Este proyecto está bajo la licencia **MIT**. Consulta el archivo [LICENSE](./LICENSE) para obtener más información.
-
