@@ -10,7 +10,7 @@
   },
   "include": [
     "src/node.ts",
-    "src/types.d.ts",
+    "src/types.ts",
     "src/core/**/*",
     "src/platforms/**/*"
   ]

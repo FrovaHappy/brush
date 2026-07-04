@@ -7,6 +7,8 @@ import { includePalettes, isValidUrl, sanitizeTemplate } from "./platforms/utils
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
+export type * from './types'
+
 
 // polyfill Path2D for node-canvas
 (globalThis as Record<string, unknown>).Path2D = Path2D as unknown as typeof globalThis.Path2D;

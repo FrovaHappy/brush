@@ -10,7 +10,7 @@
   },
   "include": [
     "src/browser.ts",
-    "src/types.d.ts",
+    "src/types.ts",
     "src/core/**/*",
     "src/platforms/**/*"
   ]

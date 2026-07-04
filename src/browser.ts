@@ -2,6 +2,8 @@ import { includePalettes, sanitizeTemplate } from "./platforms/utils";
 import type { FilterText, Font, ShapeLayer, Templete } from "./types";
 import brushCanvas from "./core";
 
+export type * from './types'
+
 function loadImageBrowser(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -34,7 +36,7 @@ export async function setFonts(fonts: Font[]) {
     try {
       const fontFace = new FontFace(name, `url(${url})`);
       await fontFace.load();
-      $fonts.add(fontFace);
+      ($fonts as any).add(fontFace);
       if (!$fonts.check(`12px ${parseName}`)) {
         console.warn(`Font ${name} loaded but is not available for use`);
       }
