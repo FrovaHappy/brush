@@ -45,7 +45,7 @@ export default function brushText(options: PaintTextProps) {
   const filter = buildFilter(layer.filter)
   if (filter) ctx.filter = filter
 
-  const maxW = layer.maxWidth ?? layer.w
+  const maxW = layer.maxWidth ?? 0
   const lHeight = layer.lineHeight ?? (fontSize * 1.2)
 
   let lineX = posX
