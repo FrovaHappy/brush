@@ -1,67 +1,67 @@
 # 🖌️ Brush
 
+*Leer en [Español](README-Spanish.md).*
+
 ![Brush Banner](https://github.com/FrovaHappy/brush/raw/main/assets/images/bg.png)
 
-Una potente y flexible librería de **Canvas Universal** diseñada para funcionar perfectamente tanto en el **Navegador (Browser)** como en **Node.js**. Permite renderizar plantillas dinámicas compuestas por capas de formas e imágenes configurables, textos adaptables y filtros avanzados, facilitando la generación dinámica de imágenes, banners y recursos visuales.
+A powerful and flexible **Universal Canvas** library designed to work perfectly in both the **Browser** and **Node.js**. It allows rendering dynamic templates composed of configurable shapes and image layers, adaptable texts, and advanced filters, facilitating the dynamic generation of images, banners, and visual assets.
 
-El código fuente está disponible en GitHub: [FrovaHappy/brush](https://github.com/FrovaHappy/brush).
-Deja tu estrella si te gusta el proyecto y ayúdame a mejorarlo.
-
-> ⚠️ **Aviso Importante:** Se ha eliminado la propiedad `w` de la capa de texto (`TextLayer`) y ahora las coordenadas `x` e `y` son obligatorias para garantizar un posicionamiento consistente del texto.
+The source code is available on GitHub: [FrovaHappy/brush](https://github.com/FrovaHappy/brush).
+Leave a star if you like the project and help me improve it.
 
 ---
 
-## 🚀 Características Principales
+## 🚀 Main Features
 
-* **Universal:** Mismo código y comportamiento tanto en el cliente (Browser) como en el servidor (Node.js).
-* **Capas Flexibles:** Soporte para capas de formas (`shape`) y de texto (`text`).
-* **Extracción de Paletas Dinámicas:** Permite extraer automáticamente los colores dominantes y vibrantes de una imagen cargada y utilizarlos en otras capas a través de variables como `{{pallete_Vibrant}}`, `{{pallete_Muted}}`, etc.
-* **Máscaras de Recorte SVG:** Permite recortar formas e imágenes utilizando cualquier trazado SVG.
-* **Ajuste y Escalado:** Soporte para `objectFit` (`cover`, `contain`, `fill`) y transformaciones como rotaciones (`rotation`).
-* **Tipografías Dinámicas:** Carga previa de fuentes del sistema o fuentes remotas (archivos `.ttf`, `.woff2`, etc.) mediante una API sencilla.
-* **Filtros CSS:** Soporte completo de filtros de estilo (sombras, desenfoques, brillo, contraste, escala de grises, opacidad, saturación, sepia y más) aplicados directamente a las capas.
-* **Validación Integrada:** Validación robusta del esquema de plantillas en tiempo de ejecución con **Zod**.
-
----
-
-## 🛠️ Tecnologías Utilizadas
-
-El proyecto utiliza un conjunto moderno de herramientas y librerías para garantizar un rendimiento óptimo y una compatibilidad multiplataforma:
-
-* **Lenguaje Principal:** [TypeScript](https://www.typescriptlang.org/) para un tipado estricto y seguro.
-* **Motor Canvas en Servidor:** [@napi-rs/canvas](https://github.com/brooooooklyn/canvas) para un renderizado ultra-rápido en Node.js mediante bindings nativos en Rust.
-* **Extracción de Colores:** [colorthief](https://github.com/lokesh/color-thief) para analizar y extraer paletas de color armoniosas desde imágenes.
-* **Procesamiento de Imágenes:** [Sharp](https://sharp.pixelplumbing.com/) para operaciones optimizadas de imágenes en Node.js.
-* **Pruebas unitarias:** [Vitest](https://vitest.dev/) para asegurar el comportamiento esperado.
-* **Calidad de Código:** [Biome](https://biomejs.dev/) para linting y formateo rápido.
+* **Universal:** Same code and behavior on both client (Browser) and server (Node.js).
+* **Flexible Layers:** Support for shape (`shape`) and text (`text`) layers.
+* **Dynamic Palette Extraction:** Automatically extracts dominant and vibrant colors from a loaded image and allows using them in other layers via variables like `{{pallete_Vibrant}}`, `{{pallete_Muted}}`, etc.
+* **SVG Clipping Masks:** Allows clipping shapes and images using any SVG path.
+* **Fit and Scale:** Support for `objectFit` (`cover`, `contain`, `fill`) and transformations like rotations (`rotation`).
+* **Dynamic Typography:** Preloads system fonts or remote fonts (`.ttf`, `.woff2` files, etc.) through a simple API.
+* **CSS Filters:** Full support for styling filters (shadows, blurs, brightness, contrast, grayscale, opacity, saturation, sepia, and more) applied directly to layers.
+* **Integrated Validation:** Robust runtime template schema validation using **Zod**.
 
 ---
 
-## ⚡ Implementación Rápida
+## 🛠️ Technologies Used
 
-Instala la librería en tu proyecto:
+The project uses a modern set of tools and libraries to ensure optimal performance and cross-platform compatibility:
+
+* **Main Language:** [TypeScript](https://www.typescriptlang.org/) for strict and safe typing.
+* **Server Canvas Engine:** [@napi-rs/canvas](https://github.com/brooooooklyn/canvas) for ultra-fast rendering in Node.js via native Rust bindings.
+* **Color Extraction:** [colorthief](https://github.com/lokesh/color-thief) to analyze and extract harmonious color palettes from images.
+* **Image Processing:** [Sharp](https://sharp.pixelplumbing.com/) for optimized image operations in Node.js.
+* **Unit Testing:** [Vitest](https://vitest.dev/) to ensure expected behavior.
+* **Code Quality:** [Biome](https://biomejs.dev/) for fast linting and formatting.
+
+---
+
+## ⚡ Quick Start
+
+Install the library in your project:
 
 ```bash
 npm install @frova_happy/brush
 ```
 
-### Guía de Inicio
+### Getting Started
 
-Dependiendo de tu entorno, importa el módulo correspondiente:
+Depending on your environment, import the corresponding module:
 
-#### 🌐 En el Navegador (Browser)
+#### 🌐 In the Browser
 
-Puedes ver un ejemplo completo en el archivo [example/html/index.html](https://github.com/FrovaHappy/brush/blob/main/example/html/index.html).
+You can see a complete example in the [example/html/index.html](https://github.com/FrovaHappy/brush/blob/main/example/html/index.html) file.
 
 ```javascript
 import { brush, setFonts } from '@frova_happy/brush/browser';
 
-// 1. Cargar fuentes personalizadas (opcional)
+// 1. Load custom fonts (optional)
 await setFonts([
   { name: 'Text', url: 'https://fonts.gstatic.com/s/loversquarrel/v25/Yq6N-LSKXTL-5bCy8ksBzpQ_-wArabs.woff2' }
 ]);
 
-// 2. Definir la plantilla
+// 2. Define the template
 const template = {
   version: '1',
   w: 800,
@@ -69,9 +69,9 @@ const template = {
   backgroundColor: '#f3f4f6',
   layers: [
     {
-      id: 'mi-texto',
+      id: 'my-text',
       type: 'text',
-      text: '¡Hola {{name}}!',
+      text: 'Hello {{name}}!',
       x: 400,
       y: 200,
       fontSize: 48,
@@ -83,38 +83,38 @@ const template = {
   ]
 };
 
-// 3. Renderizar en el canvas
+// 3. Render on the canvas
 const canvas = await brush({
   template,
-  filterText: { name: 'Desarrollador' }
+  filterText: { name: 'Developer' }
 });
 
 document.body.appendChild(canvas);
 ```
 
-#### 🟢 En Node.js
+#### 🟢 In Node.js
 
-Puedes ver un ejemplo completo en el archivo [example/node/index.js](https://github.com/FrovaHappy/brush/blob/main/example/node/index.js).
+You can see a complete example in the [example/node/index.js](https://github.com/FrovaHappy/brush/blob/main/example/node/index.js) file.
 
 ```javascript
 import { brush, setFonts } from '@frova_happy/brush/node';
 import { writeFile } from 'node:fs/promises';
 
-// Cargar fuentes y renderizar
+// Load fonts and render
 await setFonts([{ name: 'Text', url: 'https://fonts.gstatic.com/...' }]);
 
 const canvas = await brush({
-  template, // Estructura de plantilla
-  filterText: { name: 'Desarrollador' }
+  template, // Template structure
+  filterText: { name: 'Developer' }
 });
 
 const buffer = await canvas.encode('png');
 await writeFile('./output.png', buffer);
 ```
 
-#### ⚛️ En React
+#### ⚛️ In React
 
-Puedes explorar un ejemplo integrado dentro de la carpeta [example/react](https://github.com/FrovaHappy/brush/blob/main/example/react).
+You can explore an integrated example inside the [example/react](https://github.com/FrovaHappy/brush/blob/main/example/react) folder.
 
 ---
 
@@ -122,31 +122,31 @@ Puedes explorar un ejemplo integrado dentro de la carpeta [example/react](https:
 
 ### `setFonts(fonts)`
 
-Carga y registra fuentes tipográficas externas **antes** de llamar a `brush()`. Las fuentes cargadas quedan disponibles para ser utilizadas en capas de tipo `text` mediante la propiedad `fontFamily`.
+Loads and registers external typographic fonts **before** calling `brush()`. Loaded fonts become available for use in `text` layers via the `fontFamily` property.
 
 ```typescript
 type Font = {
-  name: string; // Nombre con el que se referenciará la fuente en fontFamily
-  url: string;  // URL remota (https://...) o ruta local relativa al proceso
+  name: string; // Name to reference the font in fontFamily
+  url: string;  // Remote URL (https://...) or local path relative to the process
 }
 
 setFonts(fonts: Font[]): Promise<void>
 ```
 
-**Comportamiento:**
+**Behavior:**
 
-* Si la fuente ya fue registrada (Node.js), se omite sin error.
-* En el navegador usa la API `FontFace`. En Node.js usa `GlobalFonts.register` de `@napi-rs/canvas`.
-* Si falla la carga de alguna fuente, emite un `console.warn` y continúa con las demás.
+* If the font is already registered (Node.js), it skips without error.
+* In the browser, it uses the `FontFace` API. In Node.js, it uses `@napi-rs/canvas`'s `GlobalFonts.register`.
+* If a font fails to load, it emits a `console.warn` and continues with the others.
 
-**Ejemplo:**
+**Example:**
 
 ```javascript
 import { setFonts, brush } from '@frova_happy/brush/browser';
 
 await setFonts([
-  { name: 'MiFuente', url: 'https://example.com/fonts/MiFuente.woff2' },
-  { name: 'Roboto',   url: '/static/fonts/Roboto-Regular.ttf' }
+  { name: 'MyFont', url: 'https://example.com/fonts/MyFont.woff2' },
+  { name: 'Roboto', url: '/static/fonts/Roboto-Regular.ttf' }
 ]);
 
 const canvas = await brush({
@@ -155,11 +155,11 @@ const canvas = await brush({
     w: 800, h: 400,
     layers: [
       {
-        id: 'titulo',
+        id: 'title',
         type: 'text',
-        text: 'Hola mundo',
+        text: 'Hello world',
         x: 400, y: 200,
-        fontFamily: 'MiFuente', // referencia al nombre registrado en setFonts
+        fontFamily: 'MyFont', // reference to the name registered in setFonts
         fontSize: 48,
         color: '#ffffff',
         textAlign: 'center',
@@ -172,21 +172,21 @@ const canvas = await brush({
 ```
 
 > [!IMPORTANT]
-> Siempre llama a `setFonts()` **antes** de `brush()`. Si `brush()` se ejecuta primero, las capas de texto usarán fuentes del sistema como fallback.
+> Always call `setFonts()` **before** `brush()`. If `brush()` is executed first, text layers will use system fonts as a fallback.
 
 ---
 
 ### `filterText`
 
-`filterText` es un objeto de pares clave–valor (`Record<string, string | undefined>`) que se pasa a `brush()`. Funciona como un sistema de **interpolación de variables** sobre toda la plantilla.
+`filterText` is a key-value object (`Record<string, string | undefined>`) passed to `brush()`. It acts as a **variable interpolation** system over the entire template.
 
-Cualquier string de la plantilla que contenga `{{nombre}}` será reemplazado por el valor correspondiente en `filterText` antes de renderizar.
+Any string in the template containing `{{name}}` will be replaced by the corresponding value in `filterText` before rendering.
 
 ```typescript
 type FilterText = Record<string, string | undefined>
 ```
 
-**Ejemplo básico:**
+**Basic Example:**
 
 ```javascript
 const canvas = await brush({
@@ -195,9 +195,9 @@ const canvas = await brush({
     w: 600, h: 200,
     layers: [
       {
-        id: 'saludo',
+        id: 'greeting',
         type: 'text',
-        text: 'Bienvenido, {{username}}! Nivel {{level}}',
+        text: 'Welcome, {{username}}! Level {{level}}',
         x: 10, y: 100,
         fontSize: 24,
         color: '#000000'
@@ -209,32 +209,32 @@ const canvas = await brush({
     level: '42'
   }
 });
-// Resultado → "Bienvenido, FrovaHappy! Nivel 42"
+// Result → "Welcome, FrovaHappy! Level 42"
 ```
 
-#### **Variables de paleta de colores (`pallete_*`):**
+#### **Color palette variables (`pallete_*`):**
 
-Si la plantilla tiene `layerColor` apuntando a una capa con imagen, `brush()` extrae automáticamente la paleta de esa imagen y la inyecta al `filterText` antes de renderizar. Las variables generadas son:
+If the template has a `layerColor` pointing to a layer with an image, `brush()` automatically extracts the palette from that image and injects it into `filterText` before rendering. The generated variables are:
 
-| Variable | Descripción |
+| Variable | Description |
 | :--- | :--- |
-| `{{pallete_Vibrant}}` | Color vibrante principal de la imagen. |
-| `{{pallete_LightVibrant}}` | Variante vibrante clara. |
-| `{{pallete_DarkVibrant}}` | Variante vibrante oscura. |
-| `{{pallete_Muted}}` | Color apagado principal. |
-| `{{pallete_LightMuted}}` | Variante apagada clara. |
-| `{{pallete_DarkMuted}}` | Variante apagada oscura. |
+| `{{pallete_Vibrant}}` | Main vibrant color of the image. |
+| `{{pallete_LightVibrant}}` | Light vibrant variant. |
+| `{{pallete_DarkVibrant}}` | Dark vibrant variant. |
+| `{{pallete_Muted}}` | Main muted color. |
+| `{{pallete_LightMuted}}` | Light muted variant. |
+| `{{pallete_DarkMuted}}` | Dark muted variant. |
 
-Estas variables pueden usarse en cualquier string del template, incluyendo colores de capas, filtros de sombra, etc.
+These variables can be used in any string of the template, including layer colors, shadow filters, etc.
 > [!IMPORTANT]
-> Algunos de los colores pueden no generarse, esto depende del rango de colores que maneje la imagen, ej: si una imagen esta en blanco y negro solo generara no mas de dos. el resto serán #000000
+> Some colors might not be generated depending on the color range of the image. E.g., if an image is black and white, it might generate no more than two. The rest will be `#000000`.
 
 ```javascript
 const template = {
   version: '1',
   w: 800, h: 400,
-  backgroundColor: '{{pallete_LightVibrant}}', // color de fondo dinámico
-  layerColor: 'avatar',                          // extrae paleta de esta capa
+  backgroundColor: '{{pallete_LightVibrant}}', // dynamic background color
+  layerColor: 'avatar',                          // extract palette from this layer
   layers: [
     {
       id: 'avatar',
@@ -244,12 +244,12 @@ const template = {
       color: 'auto'
     },
     {
-      id: 'nombre',
+      id: 'name',
       type: 'text',
       text: '{{username}}',
       x: 300, y: 200,
       fontSize: 40,
-      color: '{{pallete_DarkVibrant}}', // usa color extraído de la imagen
+      color: '{{pallete_DarkVibrant}}', // use color extracted from image
       textAlign: 'center',
       textBaseline: 'middle',
       filter: {
@@ -261,110 +261,133 @@ const template = {
 ```
 
 > [!NOTE]
-> Si una variable `{{nombre}}` no se encuentra en `filterText`, se reemplaza con el string `null_sanitized` y se emite un `console.warn`.
+> If a `{{name}}` variable is not found in `filterText`, it gets replaced with the string `null_sanitized` and a `console.warn` is emitted.
 
 ---
 
-## 📖 Referencia Detallada de Propiedades del Templete
+### `generateVariables(template, filterText)`
 
-### 1. Plantilla principal (`Templete`)
+> added in version 0.4.1
 
-Representa la configuración base del lienzo o canvas y sus capas principales.
+Generates variables and sanitizes the template before drawing on the canvas. It is useful for retrieving the processed template and `filterText` (for example, if you need to extract `pallete_*` variables from `layerColor` without rendering the canvas immediately).
+
+```typescript
+generateVariables(template: Templete, filterText: FilterText): Promise<{ template: Templete, filterText: FilterText }>
+```
+
+**Example:**
+
+```javascript
+import { generateVariables } from '@frova_happy/brush/node'; // or /browser
+
+const { template: processedTemplate, filterText: processedFilterText } = await generateVariables(
+  template,
+  { name: 'Developer' }
+);
+```
+
+---
+
+## 📖 Detailed Template Properties Reference
+
+### 1. Main Template (`Templete`)
+
+Represents the base configuration of the canvas and its main layers.
 > [!Note]
-> Si declaras 'auto', en 'backgroundColor' o 'layer.color' y usa 'layerColor' este usa el color obtenido de '{{pallete_Vibrant}}' si no encuentra usara 'black'
+> If you declare 'auto' in 'backgroundColor' or 'layer.color' and use 'layerColor', it uses the color obtained from '{{pallete_Vibrant}}'. If not found, it uses 'black'.
 
-| Propiedad | Tipo | Requerido | Descripción |
+| Property | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
-| `version` | `'1'` | Sí | Versión de la estructura de plantilla. |
-| `w` | `number` | Sí | Ancho del lienzo en píxeles. |
-| `h` | `number` | Sí | Alto del lienzo en píxeles. |
-| `backgroundColor` | `string` | No | Color de fondo general (soporta HEX, RGB, HSL, gradientes o transparente). |
-| `layerColor` | `string` | No | ID de la capa de tipo `shape` (que contenga una imagen) de la cual se desea extraer la paleta de colores dinámicos, los cuales puedes usar usando {{valor}} en el templete, véase [filterText](#variables-de-paleta-de-colores-pallete_) |
-| `layers` | `Layer[]` | Sí | Array de capas que componen el diseño visual. |
+| `version` | `'1'` | Yes | Template structure version. |
+| `w` | `number` | Yes | Canvas width in pixels. |
+| `h` | `number` | Yes | Canvas height in pixels. |
+| `backgroundColor` | `string` | No | General background color (supports HEX, RGB, HSL, gradients, or transparent). |
+| `layerColor` | `string` | No | ID of the `shape` layer (containing an image) from which to extract the dynamic color palette. You can use them via {{value}} in the template, see [filterText](#color-palette-variables-pallete_). |
+| `layers` | `Layer[]` | Yes | Array of layers making up the visual design. |
 
 ---
 
-### 2. Capa de Forma / Imagen (`ShapeLayer`)
+### 2. Shape / Image Layer (`ShapeLayer`)
 
-Utilizada para renderizar rectángulos, imágenes completas u objetos recortados por trazados vectoriales.
+Used to render rectangles, full images, or objects clipped by vector paths.
 
-| Propiedad | Tipo | Requerido | Descripción |
+| Property | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `string` | Sí | Identificador único de la capa. Utilizado para extraer colores si se asocia a `layerColor`. |
-| `type` | `'shape'` | Sí | Identifica el tipo de capa. |
-| `x` | `number` | Sí | Posición horizontal en el lienzo. |
-| `y` | `number` | Sí | Posición vertical en el lienzo. |
-| `w` | `number` | Sí | Ancho de la forma o imagen. |
-| `h` | `number` | Sí | Alto de la forma o imagen. |
-| `image` | `string` | No | URL o ruta de la imagen. Si no se provee, la capa actuará como una forma rectangular plana. |
-| `color` | `string` | Sí | Color de relleno o fallback. Soporta colores CSS habituales, o `'auto'` si se desea heredar el color extraído automáticamente del fondo o capa anterior. |
-| `scale` | `number` | No | Factor de escala de la imagen interna. Por defecto es `1`. |
-| `objectFit` | `'cover' \| 'contain' \| 'fill'` | No | Ajuste y proporción de la imagen dentro de los límites de la capa. |
-| `rotation` | `number` | No | Ángulo de rotación de la capa en grados (ej: `45`). |
-| `svg` | `string` | No | Cadena XML de SVG para utilizar como máscara de recorte (clipping path). |
-| `align` | `string` | No | Alineación de la máscara SVG. Ejemplo: `'center center'`, `'top left'`. |
-| `filter` | `Filter` | No | Filtros de estilo CSS aplicados a la forma. |
+| `id` | `string` | Yes | Unique layer identifier. Used to extract colors if associated with `layerColor`. |
+| `type` | `'shape'` | Yes | Identifies the layer type. |
+| `x` | `number` | Yes | Horizontal position on the canvas. |
+| `y` | `number` | Yes | Vertical position on the canvas. |
+| `w` | `number` | Yes | Width of the shape or image. |
+| `h` | `number` | Yes | Height of the shape or image. |
+| `image` | `string` | No | Image URL or path. If not provided, the layer acts as a flat rectangular shape. |
+| `color` | `string` | Yes | Fill color or fallback. Supports common CSS colors, or `'auto'` to inherit the automatically extracted color. |
+| `scale` | `number` | No | Internal image scaling factor. Defaults to `1`. |
+| `objectFit` | `'cover' \| 'contain' \| 'fill'` | No | Fit and proportion of the image within the layer bounds. |
+| `rotation` | `number` | No | Rotation angle of the layer in degrees (e.g., `45`). |
+| `svg` | `string` | No | SVG XML string to use as a clipping mask. |
+| `align` | `string` | No | SVG mask alignment. Example: `'center center'`, `'top left'`. |
+| `filter` | `Filter` | No | CSS style filters applied to the shape. |
 
 ---
 
-### 3. Capa de Texto (`TextLayer`)
+### 3. Text Layer (`TextLayer`)
 
-Permite añadir elementos tipográficos dinámicos con soporte para saltos de línea automáticos y sustituciones.
+Allows adding dynamic typographic elements with automatic line breaks and substitutions.
 
-| Propiedad | Tipo | Requerido | Descripción |
+| Property | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `string` | Sí | Identificador único de la capa. |
-| `type` | `'text'` | Sí | Identifica el tipo de capa. |
-| `text` | `string` | Sí | Texto a mostrar. Soporta variables dinámicas utilizando la sintaxis `{{nombre_variable}}`. |
-| `x` | `number` | Sí | Posición horizontal. |
-| `y` | `number` | Sí | Posición vertical. |
-| `maxWidth` | `number` | No | Ancho máximo permitido antes de forzar un salto de línea automático. |
-| `lineHeight` | `number` | No | Altura de la línea en píxeles para textos multilinea. |
-| `rotation` | `number` | No | Ángulo de rotación de la capa en grados. |
-| `fontSize` | `number` | No | Tamaño de la fuente en píxeles. Por defecto `16`. |
-| `fontFamily` | `string` | No | Nombre de la tipografía. Ej: `'Arial'`. Debe registrarse previamente si es externa. |
-| `fontWeight` | `string` | No | Grosor de la fuente. Ej: `'bold'`, `'normal'`, etc. |
-| `color` | `string` | Sí | Color del texto. Admite valores CSS o `'auto'`. |
-| `strokeColor` | `string` | No | Color del trazado o contorno exterior del texto. |
-| `strokeWidth` | `number` | No | Ancho del trazado de contorno en píxeles. |
-| `textAlign` | `'left' \| 'right' \| 'center' \| 'start' \| 'end'` | No | Alineación horizontal del texto. |
-| `textBaseline` | `'top' \| 'hanging' \| 'middle' \| 'alphabetic' \| 'ideographic' \| 'bottom'` | No | Alineación vertical del texto respecto a su coordenada base. Ej: `'middle'`. |
-| `filter` | `Filter` | No | Filtros de estilo CSS aplicados al texto. |
+| `id` | `string` | Yes | Unique layer identifier. |
+| `type` | `'text'` | Yes | Identifies the layer type. |
+| `text` | `string` | Yes | Text to display. Supports dynamic variables using `{{variable_name}}` syntax. |
+| `x` | `number` | Yes | Horizontal position. |
+| `y` | `number` | Yes | Vertical position. |
+| `maxWidth` | `number` | No | Maximum allowed width before forcing an automatic line break. |
+| `lineHeight` | `number` | No | Line height in pixels for multiline texts. |
+| `rotation` | `number` | No | Rotation angle of the layer in degrees. |
+| `fontSize` | `number` | No | Font size in pixels. Defaults to `16`. |
+| `fontFamily` | `string` | No | Typography name. E.g., `'Arial'`. Must be registered beforehand if external. |
+| `fontWeight` | `string` | No | Font weight. E.g., `'bold'`, `'normal'`, etc. |
+| `color` | `string` | Yes | Text color. Supports CSS values or `'auto'`. |
+| `strokeColor` | `string` | No | Stroke or outer outline color of the text. |
+| `strokeWidth` | `number` | No | Outline stroke width in pixels. |
+| `textAlign` | `'left' \| 'right' \| 'center' \| 'start' \| 'end'` | No | Horizontal text alignment. |
+| `textBaseline` | `'top' \| 'hanging' \| 'middle' \| 'alphabetic' \| 'ideographic' \| 'bottom'` | No | Vertical text alignment relative to its base coordinate. E.g., `'middle'`. |
+| `filter` | `Filter` | No | CSS style filters applied to the text. |
 
 ---
 
-### 4. Objeto de Filtros (`Filter`)
+### 4. Filters Object (`Filter`)
 
-Filtros estilísticos inspirados en las especificaciones CSS Canvas.
+Stylistic filters inspired by CSS Canvas specifications.
 
-| Propiedad | Tipo | Ejemplo de Valor | Descripción |
+| Property | Type | Value Example | Description |
 | :--- | :--- | :--- | :--- |
-| `blur` | `string` | `'5px'` | Desenfoque gaussiano de la capa. |
-| `brightness` | `string` | `'150%'` o `'1.5'` | Modificación del brillo del elemento. |
-| `contrast` | `string` | `'200%'` o `'2'` | Contraste de la capa. |
-| `grayscale` | `string` | `'100%'` o `'1'` | Conversión a escala de grises. |
-| `'hue-rotate'` | `string` | `'90deg'` | Rotación de tono del color. |
-| `invert` | `string` | `'100%'` o `'1'` | Inversión cromática. |
-| `opacity` | `string` | `'0.5'` o `'50%'` | Nivel de opacidad y transparencia. |
-| `saturate` | `string` | `'200%'` o `'2'` | Nivel de saturación cromática. |
-| `sepia` | `string` | `'100%'` o `'1'` | Efecto sepia. |
-| `'drop-shadow'` | `string` | `'10px 10px 5px rgba(0,0,0,0.5)'` | Sombras proyectadas con coordenadas, desenfoque y color. |
+| `blur` | `string` | `'5px'` | Gaussian blur of the layer. |
+| `brightness` | `string` | `'150%'` or `'1.5'` | Element brightness modification. |
+| `contrast` | `string` | `'200%'` or `'2'` | Layer contrast. |
+| `grayscale` | `string` | `'100%'` or `'1'` | Grayscale conversion. |
+| `'hue-rotate'` | `string` | `'90deg'` | Color hue rotation. |
+| `invert` | `string` | `'100%'` or `'1'` | Chromatic inversion. |
+| `opacity` | `string` | `'0.5'` or `'50%'` | Opacity and transparency level. |
+| `saturate` | `string` | `'200%'` or `'2'` | Chromatic saturation level. |
+| `sepia` | `string` | `'100%'` or `'1'` | Sepia effect. |
+| `'drop-shadow'` | `string` | `'10px 10px 5px rgba(0,0,0,0.5)'` | Drop shadows with coordinates, blur, and color. |
 
 ---
 
-## 🤝 Colaboración y Contribución
+## 🤝 Collaboration and Contribution
 
-¡Las contribuciones son bienvenidas! Si deseas mejorar la librería, corregir un error o proponer nuevas características, por favor sigue estos pasos:
+Contributions are welcome! If you want to improve the library, fix a bug, or propose new features, please follow these steps:
 
-1. Realiza un **Fork** del repositorio.
-2. Crea una rama para tu feature o fix: `git checkout -b feature/nueva-caracteristica`
-3. Instala dependencias y asegúrate de pasar los tests con `npm test` y el formateador con `npm run lint`.
-4. Envía tus cambios mediante un **Pull Request** detallando las mejoras realizadas.
+1. **Fork** the repository.
+2. Create a branch for your feature or fix: `git checkout -b feature/new-feature`
+3. Install dependencies and ensure tests pass with `npm test` and the formatter with `npm run lint`.
+4. Submit your changes via a **Pull Request** detailing the improvements made.
 
-Para resolver o consultar dudas, también puedes abrir un [Issue en GitHub](https://github.com/FrovaHappy/brush/issues).
+To resolve or ask questions, you can also open an [Issue on GitHub](https://github.com/FrovaHappy/brush/issues).
 
 ---
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto está bajo la licencia **MIT**. Consulta el archivo [LICENSE](./LICENSE) para obtener más información.
+This project is under the **MIT** license. See the [LICENSE](./LICENSE) file for more information.

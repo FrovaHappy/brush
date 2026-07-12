@@ -76,12 +76,19 @@ interface BrushProps {
   filterText: FilterText,
 }
 
-export async function brush(props: BrushProps): Promise<Canvas> {
-  let template = sanitizeTemplate(props.template, props.filterText);
-  const imageLayer = template.layers.find(l => l.id === template.layerColor && l.type === 'shape') as ShapeLayer | undefined;
+export async function generateVariables(template: Templete, filterText: FilterText) {
+  const temp_template = sanitizeTemplate(template, filterText);
+  const imageLayer = temp_template.layers.find(l => l.id === template.layerColor && l.type === 'shape') as ShapeLayer | undefined;
   const imageBuffer = await getImageBuffer(imageLayer?.image)
-  const filterText = await includePalettes(imageBuffer, props.filterText);
-  template = sanitizeTemplate(props.template, filterText, true);
+  filterText = await includePalettes(imageBuffer, filterText);
+  template = sanitizeTemplate(template, filterText, true);
+  return {
+    template, filterText
+  }
+}
+
+export async function brush(props: BrushProps): Promise<Canvas> {
+  const { template, filterText } = await generateVariables(props.template, props.filterText);
   const images = await getImages(template);
 
   const canvas = new Canvas(template.w, template.h);

@@ -28,6 +28,7 @@ async function getImages(template: Templete): Promise<Record<string, HTMLImageEl
   return images;
 }
 
+
 export async function setFonts(fonts: Font[]) {
   const $fonts = document.fonts;
   for (const font of fonts) {
@@ -46,15 +47,16 @@ export async function setFonts(fonts: Font[]) {
   }
 }
 
-interface BrushProps {
-  template: Templete,
-  filterText: FilterText,
-}
-
-export async function brush(props: BrushProps): Promise<HTMLCanvasElement> {
-  let template = sanitizeTemplate(props.template, props.filterText);
-  const imageLayer = template.layers.find(l => l.id === template.layerColor && l.type === 'shape') as ShapeLayer | undefined;
-
+/**
+ * Generates the variables needed to paint the canvas.
+ * 
+ * @param template The template to use for generating the variables.
+ * @param filterText The filter text to use for generating the variables.
+ * @returns An object containing the template and filter text parsed.
+ */
+export async function generateVariables(template: Templete, filterText: FilterText) {
+  const temp_template = sanitizeTemplate(template, filterText);
+  const imageLayer = temp_template.layers.find(l => l.id === template.layerColor && l.type === 'shape') as ShapeLayer | undefined;
   let loadedImage: HTMLImageElement | null = null;
   if (imageLayer?.image) {
     try {
@@ -63,9 +65,20 @@ export async function brush(props: BrushProps): Promise<HTMLCanvasElement> {
       console.warn(`Failed to load image for palette extraction: ${imageLayer.image}`, err);
     }
   }
+  filterText = await includePalettes(loadedImage, filterText);
+  template = sanitizeTemplate(template, filterText, true);
+  return {
+    template, filterText
+  }
+}
 
-  const filterText = await includePalettes(loadedImage, props.filterText);
-  template = sanitizeTemplate(props.template, filterText, true);
+interface BrushProps {
+  template: Templete,
+  filterText: FilterText,
+}
+
+export async function brush(props: BrushProps): Promise<HTMLCanvasElement> {
+  const { template, filterText } = await generateVariables(props.template, props.filterText);
   const images = await getImages(template);
 
   const canvas = document.createElement('canvas');
