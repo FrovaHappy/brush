@@ -28,6 +28,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Setup Git
         run: |
@@ -48,7 +49,12 @@ jobs:
         id: version
         run: |
           if [ "${{ github.event.inputs.bump_type }}" == "dev" ]; then
-            npm version prepatch --preid=dev -m "chore(release): %s"
+            CURRENT_VERSION=$(node -p "require('./package.json').version")
+            if [[ "$CURRENT_VERSION" == *"-dev."* ]]; then
+              npm version prerelease --preid=dev -m "chore(release): %s"
+            else
+              npm version prepatch --preid=dev -m "chore(release): %s"
+            fi
             echo "is_dev=true" >> "$GITHUB_OUTPUT"
           elif [ "${{ github.event.inputs.bump_type }}" == "fix" ]; then
             npm version patch -m "chore(release): %s"
