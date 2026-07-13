@@ -323,9 +323,6 @@ describe('paint brush', () => {
     const png = await canvas.encode('png')
     if (png.length === 0) throw new Error('Expected generated image to be non-empty')
 
-    // Ensure output directory exists
-    const outDir = './assets/images'
-    if (!existsSync(outDir)) await mkdir(outDir, { recursive: true })
-    await writeFile(`${outDir}/bg.png`, png)
+    await writeFile('./banner.png', png)
   })
 })

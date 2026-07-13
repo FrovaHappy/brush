@@ -10,3 +10,4 @@ coverage/
 .env.production.local
 *.tsbuildinfo
 package-lock.json
+banner.png

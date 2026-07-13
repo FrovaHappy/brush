@@ -2,7 +2,7 @@
 
 *Leer en [Español](README-Spanish.md).*
 
-![Brush Banner](https://github.com/FrovaHappy/brush/raw/main/assets/images/bg.png)
+![Brush Banner](https://cdn.jsdelivr.net/npm/@frova_happy/brush@latest/banner.png)
 
 A powerful and flexible **Universal Canvas** library designed to work perfectly in both the **Browser** and **Node.js**. It allows rendering dynamic templates composed of configurable shapes and image layers, adaptable texts, and advanced filters, facilitating the dynamic generation of images, banners, and visual assets.
 
