@@ -24,6 +24,20 @@ const template: Templete = {
   layerColor: 'hero_image',
   layers: [
 
+    // ── Background granite image ─────────────────────────────────────────────
+    {
+      id: 'bg_granite',
+      type: 'shape',
+      color: 'transparent',
+      image: './assets/images/granite.webp',
+      x: 0,
+      y: 0,
+      w: 900,
+      h: 300,
+      objectFit: 'cover',
+      filter: { opacity: '0.2', contrast: '1', brightness: '0.3' }
+    },
+
     // ── Background gradient strip (left accent) ──────────────────────────────
     {
       id: 'accent_strip',

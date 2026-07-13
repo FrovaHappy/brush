@@ -13,6 +13,17 @@ export type * from './types'
 // polyfill Path2D for node-canvas
 (globalThis as Record<string, unknown>).Path2D = Path2D as unknown as typeof globalThis.Path2D;
 
+const BROWSER_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
+async function fetchWithUserAgent(url: string) {
+  return fetch(url, {
+    headers: {
+      'User-Agent': BROWSER_USER_AGENT
+    },
+    signal: AbortSignal.timeout(5000)
+  });
+}
+
 // Helper function to load images in Node.js environment
 async function getImages(template: Templete): Promise<Record<string, Image>> {
 
@@ -20,7 +31,16 @@ async function getImages(template: Templete): Promise<Record<string, Image>> {
   for (const layer of template.layers) {
     if (layer.type === 'shape' && layer.image) {
       try {
-        images[layer.id] = await loadImage(layer.image);
+        let imageSource: string | Buffer = layer.image;
+        if (isValidUrl(layer.image)) {
+           const response = await fetchWithUserAgent(layer.image);
+           const arrayBuffer = await response.arrayBuffer();
+           imageSource = Buffer.from(arrayBuffer);
+        } else {
+           const rutaAbsoluta = path.resolve(process.cwd(), layer.image);
+           imageSource = await readFile(rutaAbsoluta);
+        }
+        images[layer.id] = await loadImage(imageSource);
       } catch (err) {
         console.warn(`Failed to load image for layer ${layer.id} from ${layer.image}`, err);
       }
@@ -36,7 +56,7 @@ export async function setFonts(fonts: Font[]) {
     let archive: ArrayBuffer
     try {
       if (isValidUrl(url)) {
-        archive = await (await fetch(url)).arrayBuffer()
+        archive = await (await fetchWithUserAgent(url)).arrayBuffer()
       } else {
         const rutaAbsoluta = path.resolve(process.cwd(), url);
         // Lee el archivo como Buffer (nativo de Node)
@@ -60,7 +80,7 @@ async function getImageBuffer(image: string | undefined) {
   if (!image) return null
   try {
     if (isValidUrl(image)) {
-      const data = await (await fetch(image)).arrayBuffer()
+      const data = await (await fetchWithUserAgent(image)).arrayBuffer()
       return Buffer.from(data)
     } else {
       const data = (await readFile(image)).buffer
