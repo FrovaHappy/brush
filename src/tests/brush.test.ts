@@ -1,8 +1,7 @@
 import { describe, it } from 'vitest'
 import { brush, setFonts } from '../node'
 import type { Templete } from '../types'
-import { writeFile, readFile, mkdir } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
+import { writeFile, readFile } from 'node:fs/promises'
 import VAR from './template'
 
 // Read package.json dynamically
