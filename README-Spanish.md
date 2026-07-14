@@ -288,6 +288,36 @@ const { template: processedTemplate, filterText: processedFilterText } = await g
 
 ---
 
+### `compileSVGPath(svg, resize)`
+
+> añadido en la versión 0.5.0
+
+Compila una cadena XML de SVG en una única cadena de trazado `d` y extrae las dimensiones de ancho (`w`) y alto (`h`) del SVG. Las formas geométricas básicas como `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polygon>` y `<polyline>` se compilan y aproximan automáticamente en comandos de rutas SVG (paths).
+
+```typescript
+compileSVGPath(svg: string | undefined, resize?: number): { d: string, w: number, h: number } | undefined
+```
+
+**Parámetros:**
+* `svg`: La cadena XML del SVG a compilar. Retorna `undefined` si no se provee.
+* `resize`: (Opcional) Tamaño de destino para el redimensionamiento proporcional. Si se proporciona, los comandos de la ruta compilada y las dimensiones resultantes se escalarán para que la dimensión máxima (ya sea ancho o alto) coincida con este valor.
+
+**Ejemplo:**
+```javascript
+import { compileSVGPath } from '@frova_happy/brush/node'; // o /browser
+
+const svg = `
+<svg width="100" height="100" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="40" fill="red" />
+</svg>
+`;
+
+const result = compileSVGPath(svg, 200);
+// Resultado → { d: "M 20 100 A 80 80 0 1 0 180 100 A 80 80 0 1 0 20 100 Z", w: 200, h: 200 }
+```
+
+---
+
 ## 📖 Referencia Detallada de Propiedades del Templete
 
 ### 1. Plantilla principal (`Templete`)

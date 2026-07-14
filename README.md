@@ -288,6 +288,36 @@ const { template: processedTemplate, filterText: processedFilterText } = await g
 
 ---
 
+### `compileSVGPath(svg, resize)`
+
+> added in version 0.5.0
+
+Compiles an SVG XML string into a single path string `d` and extracts the width and height dimensions of the SVG. Basic shape elements such as `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polygon>`, and `<polyline>` are automatically compiled and approximated as SVG path commands.
+
+```typescript
+compileSVGPath(svg: string | undefined, resize?: number): { d: string, w: number, h: number } | undefined
+```
+
+**Parameters:**
+* `svg`: The SVG markup string to compile. Returns `undefined` if not provided.
+* `resize`: (Optional) Proportional scaling target size. If provided, the compiled path commands and dimensions will be scaled so that the maximum dimension (width or height) matches this value.
+
+**Example:**
+```javascript
+import { compileSVGPath } from '@frova_happy/brush/node'; // or /browser
+
+const svg = `
+<svg width="100" height="100" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="40" fill="red" />
+</svg>
+`;
+
+const result = compileSVGPath(svg, 200);
+// Result → { d: "M 20 100 A 80 80 0 1 0 180 100 A 80 80 0 1 0 20 100 Z", w: 200, h: 200 }
+```
+
+---
+
 ## 📖 Detailed Template Properties Reference
 
 ### 1. Main Template (`Templete`)
