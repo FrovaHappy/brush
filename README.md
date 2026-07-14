@@ -299,10 +299,12 @@ compileSVGPath(svg: string | undefined, resize?: number): { d: string, w: number
 ```
 
 **Parameters:**
+
 * `svg`: The SVG markup string to compile. Returns `undefined` if not provided.
 * `resize`: (Optional) Proportional scaling target size. If provided, the compiled path commands and dimensions will be scaled so that the maximum dimension (width or height) matches this value.
 
 **Example:**
+
 ```javascript
 import { compileSVGPath } from '@frova_happy/brush/node'; // or /browser
 

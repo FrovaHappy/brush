@@ -299,10 +299,12 @@ compileSVGPath(svg: string | undefined, resize?: number): { d: string, w: number
 ```
 
 **Parámetros:**
+
 * `svg`: La cadena XML del SVG a compilar. Retorna `undefined` si no se provee.
 * `resize`: (Opcional) Tamaño de destino para el redimensionamiento proporcional. Si se proporciona, los comandos de la ruta compilada y las dimensiones resultantes se escalarán para que la dimensión máxima (ya sea ancho o alto) coincida con este valor.
 
 **Ejemplo:**
+
 ```javascript
 import { compileSVGPath } from '@frova_happy/brush/node'; // o /browser
 
