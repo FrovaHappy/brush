@@ -6,8 +6,8 @@
 
 A powerful and flexible **Universal Canvas** library designed to work perfectly in both the **Browser** and **Node.js**. It allows rendering dynamic templates composed of configurable shapes and image layers, adaptable texts, and advanced filters, facilitating the dynamic generation of images, banners, and visual assets.
 
-The source code is available on GitHub: [FrovaHappy/brush](https://github.com/FrovaHappy/brush).
-Leave a star if you like the project and help me improve it.
+The source code is available on GitHub: [FrovaHappy/brush](https://github.com/FrovaHappy/brush) and the package is published on npm: [@frova_happy/brush](https://www.npmjs.com/package/@frova_happy/brush).
+Leave a star ⭐ if you like the project and help me improve it.
 
 ---
 

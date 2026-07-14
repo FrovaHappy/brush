@@ -6,8 +6,8 @@
 
 Una potente y flexible librería de **Canvas Universal** diseñada para funcionar perfectamente tanto en el **Navegador (Browser)** como en **Node.js**. Permite renderizar plantillas dinámicas compuestas por capas de formas e imágenes configurables, textos adaptables y filtros avanzados, facilitando la generación dinámica de imágenes, banners y recursos visuales.
 
-El código fuente está disponible en GitHub: [FrovaHappy/brush](https://github.com/FrovaHappy/brush).
-Deja tu estrella si te gusta el proyecto y ayúdame a mejorarlo.
+El código fuente está disponible en GitHub: [FrovaHappy/brush](https://github.com/FrovaHappy/brush) y el paquete está publicado en npm: [@frova_happy/brush](https://www.npmjs.com/package/@frova_happy/brush).
+Deja tu estrella ⭐ si te gusta el proyecto y ayúdame a mejorarlo.
 
 ---
 
