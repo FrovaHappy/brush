@@ -290,7 +290,7 @@ const { template: processedTemplate, filterText: processedFilterText } = await g
 
 ### `compileSVGPath(svg, resize)`
 
-> añadido en la versión 0.5.0
+> añadido en la versión 0.5.1
 
 Compila una cadena XML de SVG en una única cadena de trazado `d` y extrae las dimensiones de ancho (`w`) y alto (`h`) del SVG. Las formas geométricas básicas como `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polygon>` y `<polyline>` se compilan y aproximan automáticamente en comandos de rutas SVG (paths).
 

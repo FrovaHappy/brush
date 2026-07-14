@@ -290,7 +290,7 @@ const { template: processedTemplate, filterText: processedFilterText } = await g
 
 ### `compileSVGPath(svg, resize)`
 
-> added in version 0.5.0
+> added in version 0.5.1
 
 Compiles an SVG XML string into a single path string `d` and extracts the width and height dimensions of the SVG. Basic shape elements such as `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polygon>`, and `<polyline>` are automatically compiled and approximated as SVG path commands.
 
