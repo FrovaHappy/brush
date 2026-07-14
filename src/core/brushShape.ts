@@ -1,6 +1,6 @@
 import type { FilterText, ShapeLayer } from '../types'
 import { buildFilter } from './buildFilter'
-import compileSVG from './compileSVG'
+import { compileSVGPath } from './compileSVGPath'
 
 interface PaintShapeProps<G extends CanvasRenderingContext2D, I extends HTMLImageElement | undefined> {
   ctx: G
@@ -65,12 +65,12 @@ export default function brushShape<G extends CanvasRenderingContext2D, I extends
 
   supportCtx.fillStyle = color ?? 'transparent'
 
-  const patch = compileSVG(layer.svg, sideMinor)
+  const patch = compileSVGPath(layer.svg, sideMinor)
   if (patch) {
     supportCtx.clip(new Path2D(patch.d))
     supportCtx.fillRect(0, 0, patch.w, patch.h)
   } else {
-    const rect = compileSVG(
+    const rect = compileSVGPath(
       `<svg width="${layer.w}" height="${layer.h}">
         <rect width="${layer.w}" height="${layer.h}"/>
       </svg>

@@ -125,3 +125,5 @@ export async function brush(props: BrushProps): Promise<Canvas> {
   });
   return canvas;
 }
+
+export { compileSVGPath } from './core/compileSVGPath';

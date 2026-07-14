@@ -1,11 +1,12 @@
 /**
- * Compiles an SVG string into a clip object with combined path 'd' attribute, width, and height.
- * Extracts 'd' from <path> elements and converts other shapes like <circle>, <rect> to path 'd'.
- * Combines multiple paths into a single string.
- * Returns an object compatible with Shape.clip.
+ * Helper to get the value of a specific attribute from an SVG tag.
+ * Handles single/double quotes and ignores escaped quotes inside values.
+ * 
+ * @param tag The HTML/SVG tag string.
+ * @param attr The name of the attribute to extract.
+ * @returns The attribute value if found, or null.
  */
 function getAttribute(tag: string, attr: string): string | null {
-  // Improved regex to handle escaped quotes and better attribute parsing
   const regex = new RegExp(`${attr}\\s*=\\s*["']([^"']*)["']`);
   const match = tag.match(regex);
   return match ? match[1] : null;
@@ -13,16 +14,14 @@ function getAttribute(tag: string, attr: string): string | null {
 
 /**
  * Determines if an SVG element should be included in the clipping path.
- * Elements are ignored if they are not visible (no fill and no stroke).
+ * Elements are ignored if they are explicitly not visible (no fill and no stroke).
+ * 
+ * @param tag The HTML/SVG tag string.
+ * @returns True if the element should be included in the path, false otherwise.
  */
 function shouldIncludeElement(tag: string): boolean {
   const fill = getAttribute(tag, 'fill');
   const stroke = getAttribute(tag, 'stroke');
-
-  // Ignore elements that are not visible:
-  // - Both fill and stroke are "none"
-  // - fill is "none" and stroke is not declared or "none"
-  // - stroke is "none" and fill is not declared or "none"
 
   const fillNone = fill === 'none';
   const strokeNone = stroke === 'none';
@@ -39,17 +38,26 @@ function shouldIncludeElement(tag: string): boolean {
     return false;
   }
 
-  // Include all other cases (has visible fill or stroke)
   return true;
 }
 
-export default function compileSVG(svg: string | undefined, resize?: number) {
-  if (!svg) return undefined
+/**
+ * Parses and compiles an SVG string into a path representation containing a combined path data string
+ * and the dimensions of the SVG.
+ * 
+ * It extracts path data ('d' attribute) from <path> elements and converts other basic shapes 
+ * (like `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polygon>`, `<polyline>`) into equivalent path commands.
+ * All paths are concatenated into a single string.
+ *
+ * @param svg The SVG markup string to parse. If undefined, the function returns undefined.
+ * @param resize Optional target size. If provided, the compiled path and its dimensions will be scaled proportionally so the maximum dimension (width or height) matches this value.
+ * @returns An object containing the compiled path data 'd', and the resulting 'w' (width) and 'h' (height), or undefined if no SVG string is provided.
+ */
+export function compileSVGPath(svg: string | undefined, resize?: number): { d: string; w: number; h: number } | undefined {
+  if (!svg) return undefined;
   let d = '';
   let w = 100; // default
   let h = 100; // default
-
-
 
   // Extract SVG dimensions
   const svgTags = svg.match(/<[\s]?svg[^>]*>/g) || [];
@@ -171,45 +179,45 @@ export default function compileSVG(svg: string | undefined, resize?: number) {
   }
 
   function scalePathData(path: string, scale: number) {
-    const numberRegex = /[-+]?(?:\d*\.\d+|\d+)(?:e[-+]?\d+)?/gi
+    const numberRegex = /[-+]?(?:\d*\.\d+|\d+)(?:e[-+]?\d+)?/gi;
 
     return path.replace(/([A-Za-z])([^A-Za-z]*)/g, (_segment, command, args: string) => {
-      let argIndex = 0
+      let argIndex = 0;
       const scaledArgs = args.replace(numberRegex, (value: string) => {
-        const num = parseFloat(value)
-        let scaled = num
+        const num = parseFloat(value);
+        let scaled = num;
 
-        const upper = command.toUpperCase()
+        const upper = command.toUpperCase();
         if (upper === 'A') {
-          const arcPos = argIndex % 7
+          const arcPos = argIndex % 7;
           if (arcPos !== 2 && arcPos !== 3 && arcPos !== 4) {
-            scaled = num * scale
+            scaled = num * scale;
           }
         } else {
-          scaled = num * scale
+          scaled = num * scale;
         }
 
-        argIndex += 1
+        argIndex += 1;
         return Number.isFinite(scaled) && Number.isInteger(scaled)
           ? String(scaled)
-          : String(+scaled.toFixed(6))
-      })
+          : String(+scaled.toFixed(6));
+      });
 
-      return `${command}${scaledArgs}`
-    })
+      return `${command}${scaledArgs}`;
+    });
   }
 
   // Apply resize scaling if provided
   if (resize) {
-    const maxDimension = Math.max(w, h)
-    const scaleFactor = resize / maxDimension
+    const maxDimension = Math.max(w, h);
+    const scaleFactor = resize / maxDimension;
 
-    d = scalePathData(d, scaleFactor)
+    d = scalePathData(d, scaleFactor);
 
     // Update dimensions
-    w = w * scaleFactor
-    h = h * scaleFactor
+    w = w * scaleFactor;
+    h = h * scaleFactor;
   }
 
-  return { d: d.trim(), w, h }
+  return { d: d.trim(), w, h };
 }
