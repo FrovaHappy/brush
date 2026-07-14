@@ -29,6 +29,14 @@ async function getImages(template: Templete): Promise<Record<string, HTMLImageEl
 }
 
 
+/**
+ * Loads and registers custom typography fonts in the Browser environment.
+ * The loaded fonts will be registered within the document's font face set
+ * and become available for use in text layers referencing them by name.
+ * 
+ * @param fonts An array of font configuration objects containing the font name and remote URL or path.
+ * @returns A promise that resolves when the fonts are loaded and registered.
+ */
 export async function setFonts(fonts: Font[]) {
   const $fonts = document.fonts;
   for (const font of fonts) {
@@ -48,11 +56,15 @@ export async function setFonts(fonts: Font[]) {
 }
 
 /**
- * Generates the variables needed to paint the canvas.
+ * Resolves template variables and dynamic color palettes based on the provided template and input text.
  * 
- * @param template The template to use for generating the variables.
- * @param filterText The filter text to use for generating the variables.
- * @returns An object containing the template and filter text parsed.
+ * This processes the template, extracts dominant/vibrant colors from the specified target image layer,
+ * interpolates those colors and text variables (`{{variableName}}`) into the template, and returns
+ * the fully resolved template and filter values.
+ * 
+ * @param template The template schema containing layout, layers, and configuration.
+ * @param filterText A key-value dictionary representing template variable inputs for interpolation.
+ * @returns A promise resolving to an object with the sanitized and fully resolved `template` and `filterText`.
  */
 export async function generateVariables(template: Templete, filterText: FilterText) {
   const temp_template = sanitizeTemplate(template, filterText);
@@ -77,6 +89,18 @@ interface BrushProps {
   filterText: FilterText,
 }
 
+/**
+ * Renders the provided template onto an HTML5 Canvas element in the Browser.
+ * 
+ * This function processes the template variables, loads all required images asynchronously,
+ * prepares the 2D canvas context, and draws the layers (shapes, images, texts, filters)
+ * as defined in the template.
+ * 
+ * @param props Configuration properties containing the template and filter inputs.
+ * @param props.template The canvas template to render.
+ * @param props.filterText A dictionary of variable values to interpolate into the template.
+ * @returns A promise that resolves with the rendered HTMLCanvasElement.
+ */
 export async function brush(props: BrushProps): Promise<HTMLCanvasElement> {
   const { template, filterText } = await generateVariables(props.template, props.filterText);
   const images = await getImages(template);

@@ -49,6 +49,15 @@ async function getImages(template: Templete): Promise<Record<string, Image>> {
   return images;
 }
 
+/**
+ * Loads and registers custom typography fonts in the Node.js environment.
+ * The loaded fonts will be registered globally via `@napi-rs/canvas`
+ * and become available for use in text layers referencing them by name.
+ * Supports loading from remote URLs or local file paths.
+ * 
+ * @param fonts An array of font configuration objects containing the font name and remote URL or path.
+ * @returns A promise that resolves when the fonts are registered.
+ */
 export async function setFonts(fonts: Font[]) {
   for (const font of fonts) {
     const { url, name } = font;
@@ -96,6 +105,17 @@ interface BrushProps {
   filterText: FilterText,
 }
 
+/**
+ * Resolves template variables and dynamic color palettes based on the provided template and input text.
+ * 
+ * This processes the template, extracts dominant/vibrant colors from the specified target image layer,
+ * interpolates those colors and text variables (`{{variableName}}`) into the template, and returns
+ * the fully resolved template and filter values.
+ * 
+ * @param template The template schema containing layout, layers, and configuration.
+ * @param filterText A key-value dictionary representing template variable inputs for interpolation.
+ * @returns A promise resolving to an object with the sanitized and fully resolved `template` and `filterText`.
+ */
 export async function generateVariables(template: Templete, filterText: FilterText) {
   const temp_template = sanitizeTemplate(template, filterText);
   const imageLayer = temp_template.layers.find(l => l.id === template.layerColor && l.type === 'shape') as ShapeLayer | undefined;
@@ -107,6 +127,18 @@ export async function generateVariables(template: Templete, filterText: FilterTe
   }
 }
 
+/**
+ * Renders the provided template onto a Canvas object in Node.js using `@napi-rs/canvas`.
+ * 
+ * This function processes the template variables, loads all required images from local paths or URLs
+ * asynchronously, prepares the canvas context, and draws the layers (shapes, images, texts, filters)
+ * as defined in the template.
+ * 
+ * @param props Configuration properties containing the template and filter inputs.
+ * @param props.template The canvas template to render.
+ * @param props.filterText A dictionary of variable values to interpolate into the template.
+ * @returns A promise that resolves with the rendered Canvas instance.
+ */
 export async function brush(props: BrushProps): Promise<Canvas> {
   const { template, filterText } = await generateVariables(props.template, props.filterText);
   const images = await getImages(template);
