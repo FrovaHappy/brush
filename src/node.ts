@@ -159,3 +159,4 @@ export async function brush(props: BrushProps): Promise<Canvas> {
 }
 
 export { compileSVGPath } from './core/compileSVGPath';
+export { sanitizeTemplate } from './platforms/utils';
