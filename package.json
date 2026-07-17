@@ -1,6 +1,6 @@
 {
   "name": "@frova_happy/brush",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Powerful universal canvas library for Browser and Node.js that renders dynamic templates with shapes, images, adaptable texts, and filters.",
   "type": "module",
   "packageManager": "pnpm@11.9.0",
