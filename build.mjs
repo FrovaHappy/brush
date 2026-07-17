@@ -19,6 +19,15 @@ const builds = [
     outfile: 'dist/node/index.js',
     external: ['@napi-rs/canvas', 'colorthief'],
   },
+  // CJS build for Node
+  {
+    entryPoints: ['src/node.ts'],
+    bundle: true,
+    platform: 'node',
+    format: 'cjs',
+    outfile: 'dist/node/index.cjs',
+    external: ['@napi-rs/canvas', 'colorthief'],
+  },
 ];
 
 async function runBuilds() {
