@@ -288,6 +288,45 @@ const { template: processedTemplate, filterText: processedFilterText } = await g
 
 ---
 
+### `sanitizeTemplate(template, values, log)`
+
+> added in version 0.6.0
+
+Replaces all dynamic variables formatted as `{{variable_name}}` in the template object with the values provided in the `values` object. If a variable is not found in the values, it will be replaced with an empty string.
+
+```typescript
+sanitizeTemplate<T>(template: T, values: Record<string, string | number | undefined>, log?: boolean): T
+```
+
+**Parameters:**
+
+* `template`: The template object to sanitize.
+* `values`: A key-value dictionary representing the variable inputs to interpolate into the template.
+* `log`: (Optional, default `false`) If set to `true`, a warning is logged to the console for any variable in the template that is not present in `values`.
+
+**Example:**
+
+```javascript
+import { sanitizeTemplate } from '@frova_happy/brush/node'; // or /browser
+
+const template = {
+  version: '1',
+  w: 800,
+  layers: [
+    {
+      id: 'title',
+      type: 'text',
+      text: 'Welcome, {{name}}!'
+    }
+  ]
+};
+
+const sanitized = sanitizeTemplate(template, { name: 'Alice' });
+// Result -> { version: '1', w: 800, layers: [ { id: 'title', type: 'text', text: 'Welcome, Alice!' } ] }
+```
+
+---
+
 ### `compileSVGPath(svg, resize)`
 
 > added in version 0.5.1
